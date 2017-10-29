@@ -17,7 +17,7 @@ L.Icon.Default.mergeOptions({
 class Heatmap extends Component {
 	constructor(props) {
 		super(props);
-		State.tab = '1';
+		State.tab = '2';
 		this.state = State;
 	}
 
@@ -33,8 +33,7 @@ class Heatmap extends Component {
 		State.coords = {};
 		State.coords.lat = pos.latitude;
 		State.coords.lng = pos.longitude;
-		console.log('update position heatmap', State);
-		this.setState(State);
+		this._mounted && this.setState(State);
 	}
 
 	async componentDidMount() {
@@ -43,7 +42,7 @@ class Heatmap extends Component {
 		this._renderHeatmapData(State.drinks);
 		var pos = await getCurrentPosition();
 		this._updatePosition(pos);
-		this.setState(State);
+		this._mounted && this.setState(State);
 	}
 
 	componentWillUnmount() {

@@ -20,15 +20,11 @@ class Home extends Component {
 		this._updatePosition = this._updatePosition.bind(this);
 		this._trackBeer = this._trackBeer.bind(this);
 		this.handleChangeSpeedDial = this.handleChangeSpeedDial.bind(this);
-		//this._locationPromise.promise.then(this._updatePosition, ()=>{});
-
-		this.reloadDrinks();
 	}
 
 	async componentDidMount() { 
 		this._mounted = true;
-		var pos = await getCurrentPosition();
-		this._updatePosition(pos);
+		this.reloadDrinks();
 	}
 
 	componentWillUnmount() {
@@ -98,8 +94,7 @@ class Home extends Component {
 		};
 		return (
 			<div style={fullHeight}>
-				<div>lat: {this.state.coords.lat}</div>
-				<div>lng: {this.state.coords.lng}</div>
+				<div>d</div>
 				<ul>
 				{this.state.drinks.map((b, idx) => 
 					<li key={`b-${idx}`}>{b.ml} {b.timestamp.toUTCString()}</li>

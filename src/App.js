@@ -11,8 +11,8 @@ import Paper from 'material-ui/Paper';
 
 import './App.css';
 import Home from './Home';
+import Charts from './Charts';
 import Heatmap from './Heatmap';
-
 
 const recentsIcon = <MaterialIcon icon="home" className="material-icons" />;
 const favoritesIcon = <MaterialIcon icon="place" className="material-icons"/>;
@@ -23,7 +23,8 @@ class MainTabs extends Component {
 		var selectedIndex;
 		switch(location.pathname) {
 			case '/': selectedIndex = 0; break;
-			case '/heatmap': selectedIndex = 1; break;
+			case '/charts': selectedIndex = 1; break;
+			case '/heatmap': selectedIndex = 2; break;
 			default: selectedIndex = 0; break;
 		}
 		return (
@@ -33,6 +34,11 @@ class MainTabs extends Component {
 							label="Tracking"
 							icon={recentsIcon}
 							onClick={() => history.push('/')}
+						/>
+						<BottomNavigationItem
+							label="Charts"
+							icon={favoritesIcon}
+							onClick={() => history.push('/charts')}
 						/>
 						<BottomNavigationItem
 							label="Heatmap"
@@ -55,6 +61,7 @@ class App extends Component {
 					<div>
 						<Switch>
 							<Route exact path="/" component={Home}/>
+							<Route path="/charts" component={Charts}/>
 							<Route path="/heatmap" component={Heatmap}/>
 						</Switch>
 						<MainTabsWithRouter />
