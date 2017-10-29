@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import State from './State';
 import db from './db';
-import { getCurrentPosition } from './Helper';
+import { getCurrentPosition, updateState } from './Helper';
 import 'leaflet/dist/leaflet.css';
 import { Map, TileLayer, Marker, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
@@ -17,8 +17,10 @@ L.Icon.Default.mergeOptions({
 class Heatmap extends Component {
 	constructor(props) {
 		super(props);
-		State.tab = '2';
-		this.state = State;
+		this.state = {
+			global: State,
+			zoom: 13
+		};
 	}
 
 	_renderHeatmapData(drinks) {
@@ -30,19 +32,20 @@ class Heatmap extends Component {
 	}
 
 	_updatePosition(pos) {
-		State.coords = {};
-		State.coords.lat = pos.latitude;
-		State.coords.lng = pos.longitude;
-		this._mounted && this.setState(State);
+		State.coords = {
+			lat: pos.latitude,
+			lng: pos.longitude
+		}
+		this._mounted && this.setState(updateState({ global: State }));
 	}
 
 	async componentDidMount() {
 		this._mounted = true;
-		State.drinks = (await db.drinks.toArray()).reverse();
-		this._renderHeatmapData(State.drinks);
+		var drinks = (await db.drinks.toArray()).reverse();
+		this._renderHeatmapData(drinks);
 		var pos = await getCurrentPosition();
 		this._updatePosition(pos);
-		this._mounted && this.setState(State);
+		this._mounted && this.setState(updateState({ drinks: drinks }));
 	}
 
 	componentWillUnmount() {
@@ -50,14 +53,14 @@ class Heatmap extends Component {
 	}
 
 	render() {
-		console.log('render', this.state.coords);
+		console.log('render', this.state.global.coords);
 		return (
-			<Map ref="map" center={this.state.coords} zoom={this.state.zoom} zoomControl={false}>
+			<Map ref="map" center={this.state.global.coords} zoom={this.state.zoom} zoomControl={false}>
 				<TileLayer
 				attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				/>
-				<Marker position={this.state.coords} />
+				<Marker position={this.state.global.coords} />
 				<ZoomControl position="bottomright" />
 			</Map>
 		)

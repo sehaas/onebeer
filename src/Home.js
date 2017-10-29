@@ -6,7 +6,7 @@ import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import State from './State';
 import db from './db';
-import {getCurrentPosition} from './Helper';
+import {getCurrentPosition, updateState} from './Helper';
 
 injectTapEventPlugin();
 
@@ -14,8 +14,11 @@ class Home extends Component {
 
 	constructor(props) {
 		super(props);
-		State.tab = '0';
-		this.state = State;
+		this.state = {
+			global: State,
+			drinks: [],
+			isSpeedDialOpen: false
+		};
 
 		this._updatePosition = this._updatePosition.bind(this);
 		this._trackBeer = this._trackBeer.bind(this);
@@ -32,8 +35,8 @@ class Home extends Component {
 	}
 
 	async reloadDrinks() {
-		State.drinks = (await db.drinks.toArray()).reverse();
-		this._mounted && this.setState(State);
+		var drinks = (await db.drinks.toArray()).reverse();
+		this._mounted && this.setState(updateState({ drinks: drinks}));
 	}
 
 	async _trackBeer(ml) {
@@ -47,13 +50,16 @@ class Home extends Component {
 			lat: pos.latitude,
 			lng: pos.longitude,
 		}).then(rld, (err) => { console.log('add failed', err) });
+		this._updatePosition(pos);
 	}
 
 
 	_updatePosition(pos) {
-		State.coords.lat = pos.latitude;
-		State.coords.lng = pos.longitude;
-		this._mounted && this.setState(State);
+		State.coords = {
+			lat: pos.latitude,
+			lng: pos.longitude
+		};
+		this._mounted && this.setState(updateState({ global: State }));
 	}
 
 	_error(err) {
@@ -61,8 +67,7 @@ class Home extends Component {
 	}
 
 	handleChangeSpeedDial({ isOpen }) {
-		State.isSpeedDialOpen = isOpen;
-		this.setState(State);
+		this.setState(updateState({isSpeedDialOpen: isOpen}));
 	}
 
 	render() {

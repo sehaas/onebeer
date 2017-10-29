@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
-import State from './State';
 import db from './db';
+import State from './State';
+import { updateState } from './Helper';
 import { ScatterplotChart } from 'react-easy-chart';
 
 class Charts extends Component {
 
 	constructor(props) {
 		super(props);
-		State.tab = '1';
-		State.data = [];
-		this.state = State;
-
+		this.state = {
+			global: State,
+			data: [],
+			width: 300,
+			height: 580
+		};
 	}
 
 	async componentDidMount() { 
@@ -39,11 +42,11 @@ class Charts extends Component {
 			return d;
 		}, data);
 		data = data.filter( e => e.z > 0);
-		State.data = data;
 
-		State.width = this.refs.component.offsetWidth;
-		State.height = 580;
-		this._mounted && this.setState(State);
+		this._mounted && this.setState(updateState({
+			data: data,
+			width: this.refs.component.offsetWidth,
+		}));
 	}
 
 	componentWillUnmount() {
