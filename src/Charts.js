@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import db from './db';
 import State from './State';
 import { updateState } from './Helper';
-import { ScatterplotChart } from 'react-easy-chart';
+import { ScatterplotChart, BarChart } from 'react-easy-chart';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
 
 class Charts extends Component {
 
@@ -12,7 +13,7 @@ class Charts extends Component {
 			global: State,
 			data: [],
 			width: 300,
-			height: 580
+			height: 500
 		};
 	}
 
@@ -45,7 +46,7 @@ class Charts extends Component {
 
 		this._mounted && this.setState(updateState({
 			data: data,
-			width: this.refs.component.offsetWidth,
+			width: this.refs.widthHelper.offsetWidth - 50,
 		}));
 	}
 
@@ -53,23 +54,28 @@ class Charts extends Component {
 		this._mounted = false;
 	}
 
-
 	render() {
-		const scrollStyle = {
-			overflow: 'auto',
-			height: '604px',
-		}
 		return (
-			<div ref="component" style={scrollStyle}>
-			<ScatterplotChart ref="eins"
-				data={this.state.data}
-				axes
-				width={this.state.width}
-				height={this.state.height}
-				xType="text"
-				yDomainRange={[0,23]}
-				grid
-			/>
+			<div ref="widthHelper">
+				<Card initiallyExpanded={true}>
+					<CardHeader
+						title="Punchcard"
+						actAsExpander={true}
+						showExpandableButton={true}
+					/>
+					<CardText expandable={true}>
+						<ScatterplotChart ref="eins"
+							data={this.state.data}
+							axes
+							width={this.state.width}
+							height={this.state.height}
+							xType="text"
+							yDomainRange={[0,23]}
+							grid
+							margin={{top: 10, right: 0, bottom: 30, left: 30}}
+						/>
+					</CardText>
+				</Card>
 			</div>
 		)
 	}
