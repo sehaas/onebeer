@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import Avatar from 'material-ui/Avatar';
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
+import moment from 'moment';
 import { blue200, blue500, blue900 } from 'material-ui/styles/colors';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
@@ -36,7 +40,21 @@ class Home extends Component {
 
 	async reloadDrinks() {
 		var drinks = (await db.drinks.toArray()).reverse();
-		this._mounted && this.setState(updateState({ drinks: drinks}));
+		var data = drinks.reduce((l, e) => {
+			var k = moment(e.timestamp).startOf('day');
+			var sec = '' + k.unix();
+			l[sec] = l[sec] || {
+				key: k,
+				list: []
+			};
+			l[sec].list.push(e);
+			return l;
+		}, {});
+		drinks = [];
+		Object.keys(data).reverse().forEach((elem, idx) => {
+			drinks.push(data[elem]);
+		});
+		this._mounted && this.setState(updateState({ drinks: drinks }));
 	}
 
 	async _trackBeer(ml, af) {
@@ -94,26 +112,43 @@ class Home extends Component {
 				},
 			],
 		};
-		const fullHeight = {
-			height:'calc(100vh - 56px)'
-		};
 		const moveUp = {
 			bottom: '56px'
 		};
+		const dayLabel = {
+			sameDay: '[Today]',
+			nextDay: '[Tomorrow]',
+			nextWeek: 'dddd',
+			lastDay: '[Yesterday]',
+			lastWeek: '[Last] dddd',
+			sameElse: 'DD/MM/YYYY'
+		};
 		return (
-			<div style={fullHeight}>
-				<div>d</div>
-				<ul>
-				{this.state.drinks.map((b, idx) => 
-					<li key={`b-${idx}`}>{b.ml} {b.timestamp.toUTCString()}</li>
+			<div>
+				<List>
+				{this.state.drinks.map((day, idx) =>
+					<div key={`day-${idx}`}>
+						<Subheader>{day.key.calendar(null, dayLabel)}
+						</Subheader>
+						{day.list.map((drink, didx) =>
+							<ListItem key={`d-${didx}`}
+								primaryText={
+									<div>
+										<span role="img" aria-label="beer">🍺</span>
+										<span> {drink.ml}ml {moment(drink.timestamp).format("HH:mm:ss")}</span>
+									</div>
+								}
+							/>
+						)}
+						<Divider/>
+					</div>
 				)}
-				</ul>
+				</List>
 				<SpeedDial isOpen={this.state.isSpeedDialOpen} onChange={this.handleChangeSpeedDial} style={moveUp}>
 					<BubbleList>
-						{list.items.map((item, index) => {
-							return (
-								<BubbleListItem key={index} {...item} />);
-						})}
+						{list.items.map((item, index) =>
+							<BubbleListItem key={index} {...item} />
+						)}
 					</BubbleList>
 				</SpeedDial>
 			</div>
