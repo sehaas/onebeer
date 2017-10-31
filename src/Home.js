@@ -39,9 +39,10 @@ class Home extends Component {
 		this._mounted && this.setState(updateState({ drinks: drinks}));
 	}
 
-	async _trackBeer(ml) {
-		State.isSpeedDialOpen = !State.isSpeedDialOpen;
-		this._mounted && this.setState(State);
+	async _trackBeer(ml, af) {
+		this._mounted && this.setState(updateState({
+			isSpeedDialOpen: !this.state.isSpeedDialOpen
+		}));
 		var pos = await getCurrentPosition();
 		var rld = this.reloadDrinks.bind(this);
 		db.drinks.add({
@@ -49,6 +50,7 @@ class Home extends Component {
 			timestamp: new Date(),
 			lat: pos.latitude,
 			lng: pos.longitude,
+			af: af
 		}).then(rld, (err) => { console.log('add failed', err) });
 		this._updatePosition(pos);
 	}
@@ -70,14 +72,15 @@ class Home extends Component {
 		this.setState(updateState({isSpeedDialOpen: isOpen}));
 	}
 
+
 	render() {
 		const that = this;
 		const list = {
 			items: [
 				{
-					primaryText: 'Pfiff',
+					primaryText: 'Halbe AF',
 					rightAvatar: <Avatar backgroundColor={blue200} icon={<ContentAdd />}/>,
-					onClick() { that._trackBeer(250); },
+					onClick() { that._trackBeer(500, true); },
 				},
 				{
 					primaryText: 'Seidl',
