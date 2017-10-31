@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 import { withRouter } from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import MaterialIcon from 'react-google-material-icons'
+import MaterialIcon from 'react-google-material-icons';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
 
@@ -15,7 +15,15 @@ import Charts from './Charts';
 import Heatmap from './Heatmap';
 
 const recentsIcon = <MaterialIcon icon="home" className="material-icons" />;
+const chartsIcon = <MaterialIcon icon="insert_chart" className="material-icons"/>;
 const favoritesIcon = <MaterialIcon icon="place" className="material-icons"/>;
+
+const keepDown = {
+	position: 'fixed',
+	bottom: '0px',
+	left: '0px',
+	right: '0px'
+}
 
 class MainTabs extends Component {
 	render() {
@@ -28,7 +36,7 @@ class MainTabs extends Component {
 			default: selectedIndex = 0; break;
 		}
 		return (
-				<Paper zDepth={1}>
+				<Paper zDepth={1} style={keepDown}>
 					<BottomNavigation selectedIndex={selectedIndex}>
 						<BottomNavigationItem
 							label="Tracking"
@@ -37,7 +45,7 @@ class MainTabs extends Component {
 						/>
 						<BottomNavigationItem
 							label="Charts"
-							icon={favoritesIcon}
+							icon={chartsIcon}
 							onClick={() => history.push('/charts')}
 						/>
 						<BottomNavigationItem
