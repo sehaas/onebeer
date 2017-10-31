@@ -53,7 +53,6 @@ class Heatmap extends Component {
 	}
 
 	render() {
-		console.log('render', this.state.global.coords);
 		return (
 			<Map ref="map" center={this.state.global.coords} zoom={this.state.zoom} zoomControl={false}>
 				<TileLayer
