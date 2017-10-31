@@ -14,9 +14,9 @@ import Home from './Home';
 import Charts from './Charts';
 import Heatmap from './Heatmap';
 
-const recentsIcon = <MaterialIcon icon="home" className="material-icons" />;
+const homeIcon = <MaterialIcon icon="home" className="material-icons" />;
 const chartsIcon = <MaterialIcon icon="insert_chart" className="material-icons"/>;
-const favoritesIcon = <MaterialIcon icon="place" className="material-icons"/>;
+const mapsIcon = <MaterialIcon icon="place" className="material-icons"/>;
 
 const keepDown = {
 	position: 'fixed',
@@ -40,18 +40,18 @@ class MainTabs extends Component {
 					<BottomNavigation selectedIndex={selectedIndex}>
 						<BottomNavigationItem
 							label="Tracking"
-							icon={recentsIcon}
-							onClick={() => history.push('/')}
+							icon={homeIcon}
+							onClick={() => history.replace('/')}
 						/>
 						<BottomNavigationItem
 							label="Charts"
 							icon={chartsIcon}
-							onClick={() => history.push('/charts')}
+							onClick={() => history.replace('/charts')}
 						/>
 						<BottomNavigationItem
 							label="Heatmap"
-							icon={favoritesIcon}
-							onClick={() => history.push('/heatmap')}
+							icon={mapsIcon}
+							onClick={() => history.replace('/heatmap')}
 						/>
 					</BottomNavigation>
 				</Paper>
