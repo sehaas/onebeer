@@ -11,6 +11,9 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import State from './State';
 import db from './db';
 import {getCurrentPosition, updateState} from './Helper';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import Paper from 'material-ui/Paper';
 
 injectTapEventPlugin();
 
@@ -21,13 +24,21 @@ class Home extends Component {
 		this.state = {
 			global: State,
 			drinks: [],
-			isSpeedDialOpen: false
+			overall: 0.0,
+			nrDrinks: 0,
+			isSpeedDialOpen: false,
+			showDelete: false,
 		};
 
 		this._updatePosition = this._updatePosition.bind(this);
 		this._trackBeer = this._trackBeer.bind(this);
 		this.handleChangeSpeedDial = this.handleChangeSpeedDial.bind(this);
 		this._deleteDrink = this._deleteDrink.bind(this);
+
+		this.lastId = null;
+		this.lastIdCount = 0;
+		this.startTouch = this.startTouch.bind(this);
+		this.handleClose = this.handleClose.bind(this);
 	}
 
 	async componentDidMount() { 
@@ -41,7 +52,10 @@ class Home extends Component {
 
 	async reloadDrinks() {
 		var drinks = (await db.drinks.toArray()).reverse();
+		var overall = 0;
+		var nrDrinks = drinks.length;
 		var data = drinks.reduce((l, e) => {
+			overall += e.ml;
 			var k = moment(e.timestamp).startOf('day');
 			var sec = '' + k.unix();
 			l[sec] = l[sec] || {
@@ -55,7 +69,11 @@ class Home extends Component {
 		Object.keys(data).reverse().forEach((elem, idx) => {
 			drinks.push(data[elem]);
 		});
-		this._mounted && this.setState(updateState({ drinks: drinks }));
+		this._mounted && this.setState(updateState({
+			drinks: drinks,
+			overall: overall / 1000,
+			nrDrinks: nrDrinks
+		}));
 	}
 
 	async _trackBeer(ml, af) {
@@ -74,9 +92,30 @@ class Home extends Component {
 		this._updatePosition(pos);
 	}
 
-	async _deleteDrink(id) {
-		await db.drinks.delete(id);
-		this.reloadDrinks();
+	async _deleteDrink() {
+		this.handleClose();
+		if (this.lastId) {
+			await db.drinks.delete(this.lastId);
+			this.reloadDrinks();
+		}
+	}
+
+	startTouch(id) {
+		if (id === this.lastId) {
+			if (this.lastIdCount > 5) {
+				this.lastIdCount = 0;
+				this._mounted && this.setState(updateState({ showDelete: true }));
+			} else {
+				this.lastIdCount++;
+			}
+		} else {
+			this.lastId = id;
+			this.lastIdCount = 1;
+		}
+	}
+
+	handleClose() {
+		this._mounted && this.setState(updateState({ showDelete: false }));
 	}
 
 	_updatePosition(pos) {
@@ -129,19 +168,41 @@ class Home extends Component {
 		};
 		return (
 			<div>
+				<Paper zDepth={3}
+					style={{
+						width: '48vw',
+						textAlign: 'center',
+						display: 'inline-block',
+						margin: '1vw'
+					}}
+				>
+					<span style={{fontSize:'3em'}}>{this.state.overall}</span>
+					<span><br/>litres</span>
+				</Paper>
+				<Paper zDepth={3}
+					style={{
+						width: '48vw',
+						textAlign: 'center',
+						display: 'inline-block',
+						margin: '1vw'
+					}}
+				>
+					<span style={{fontSize:'3em'}}>{this.state.nrDrinks}</span>
+					<span><br/>drinks</span>
+				</Paper>
 				<List>
 				{this.state.drinks.map((day, idx) =>
 					<div key={`day-${idx}`}>
 						<Subheader>{day.key.calendar(null, dayLabel)}</Subheader>
 						{day.list.map((drink, didx) =>
-							<ListItem key={`d-${didx}`}
-								primaryText={
-									<div>
-										<span role="img" aria-label="beer">🍺</span>
-										<span> {drink.ml}ml {moment(drink.timestamp).format("HH:mm:ss")}</span>
-									</div>
-								}
-							/>
+								<ListItem key={`drink-${didx}`}
+									onClick={this.startTouch.bind(null, drink.id)}
+									leftAvatar={<Avatar icon={<span role="img" aria-label="beer" style={{marginTop:'.75em'}}>🍺</span>} />}
+									primaryText={<span>{drink.ml}ml {drink.af? '(AF)' :''}</span>}
+									secondaryText={
+										<p>{moment(drink.timestamp).format("HH:mm:ss")}</p>
+									}
+								/>
 						)}
 						<Divider/>
 					</div>
@@ -154,6 +215,25 @@ class Home extends Component {
 						)}
 					</BubbleList>
 				</SpeedDial>
+				<Dialog
+					title="Delete Drink"
+					actions={[
+						<FlatButton
+							label="Cancel"
+							primary={true}
+							onClick={this.handleClose}
+						/>,
+						<FlatButton
+							label="Delete"
+							primary={true}
+							onClick={this._deleteDrink}
+						/>,
+					]}
+					modal={true}
+					open={this.state.showDelete}
+					>
+					Remove selected drink?
+				</Dialog>
 			</div>
 		)
 	}
