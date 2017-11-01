@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import db from './db';
 import State from './State';
 import { updateState } from './Helper';
-import { ScatterplotChart, BarChart } from 'react-easy-chart';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import { ScatterplotChart } from 'react-easy-chart';
+import { Card, CardHeader, CardText } from 'material-ui/Card';
 
 class Charts extends Component {
 

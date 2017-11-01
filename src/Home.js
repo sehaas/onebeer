@@ -27,6 +27,7 @@ class Home extends Component {
 		this._updatePosition = this._updatePosition.bind(this);
 		this._trackBeer = this._trackBeer.bind(this);
 		this.handleChangeSpeedDial = this.handleChangeSpeedDial.bind(this);
+		this._deleteDrink = this._deleteDrink.bind(this);
 	}
 
 	async componentDidMount() { 
@@ -73,6 +74,10 @@ class Home extends Component {
 		this._updatePosition(pos);
 	}
 
+	async _deleteDrink(id) {
+		await db.drinks.delete(id);
+		this.reloadDrinks();
+	}
 
 	_updatePosition(pos) {
 		State.coords = {
@@ -89,7 +94,6 @@ class Home extends Component {
 	handleChangeSpeedDial({ isOpen }) {
 		this.setState(updateState({isSpeedDialOpen: isOpen}));
 	}
-
 
 	render() {
 		const that = this;
@@ -128,8 +132,7 @@ class Home extends Component {
 				<List>
 				{this.state.drinks.map((day, idx) =>
 					<div key={`day-${idx}`}>
-						<Subheader>{day.key.calendar(null, dayLabel)}
-						</Subheader>
+						<Subheader>{day.key.calendar(null, dayLabel)}</Subheader>
 						{day.list.map((drink, didx) =>
 							<ListItem key={`d-${didx}`}
 								primaryText={
