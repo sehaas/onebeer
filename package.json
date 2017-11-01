@@ -20,11 +20,11 @@
     "react-easy-chart": "^0.3.0",
     "react-faux-dom": "^4.0.5",
     "react-google-material-icons": "^1.0.4",
-    "react-leaflet": "^1.7.1",
+    "react-leaflet": "^1.7.2",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.14",
-    "react-speed-dial": "^0.4.5",
+    "react-speed-dial": "^0.4.6",
     "react-tap-event-plugin": "^3.0.2",
     "typeface-roboto": "0.0.41"
   },
