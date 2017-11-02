@@ -17,7 +17,7 @@
     "moment": "^2.19.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-easy-chart": "^0.3.0",
+    "react-easy-chart": "github:sehaas/react-easy-chart#scatterplot_z_value",
     "react-faux-dom": "^4.0.5",
     "react-google-material-icons": "^1.0.4",
     "react-leaflet": "^1.7.2",

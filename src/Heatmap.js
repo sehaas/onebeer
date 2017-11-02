@@ -54,7 +54,9 @@ class Heatmap extends Component {
 
 	render() {
 		return (
-			<Map ref="map" center={this.state.global.coords} zoom={this.state.zoom} zoomControl={false}>
+			<Map ref="map" center={this.state.global.coords}
+				zoom={this.state.zoom} zoomControl={false}
+				style={{position: 'absolute'}} >
 				<TileLayer
 				attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

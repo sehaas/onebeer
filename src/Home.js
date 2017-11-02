@@ -4,7 +4,6 @@ import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import moment from 'moment';
-import { blue200, blue500, blue900 } from 'material-ui/styles/colors';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -140,17 +139,17 @@ class Home extends Component {
 			items: [
 				{
 					primaryText: 'Halbe AF',
-					rightAvatar: <Avatar backgroundColor={blue200} icon={<ContentAdd />}/>,
+					rightAvatar: <Avatar backgroundColor={'#ffd149'} icon={<ContentAdd />}/>,
 					onClick() { that._trackBeer(500, true); },
 				},
 				{
 					primaryText: 'Seidl',
-					rightAvatar: <Avatar backgroundColor={blue500} icon={<ContentAdd />}/>,
+					rightAvatar: <Avatar backgroundColor={'#ffa000'} icon={<ContentAdd />}/>,
 					onClick() { that._trackBeer(330); },
 				},
 				{
 					primaryText: 'Halbe',
-					rightAvatar: <Avatar backgroundColor={blue900} icon={<ContentAdd />}/>,
+					rightAvatar: <Avatar backgroundColor={'#c67100'} icon={<ContentAdd />}/>,
 					onClick() { that._trackBeer(500); },
 				},
 			],
@@ -168,7 +167,7 @@ class Home extends Component {
 		};
 		return (
 			<div>
-				<Paper zDepth={3}
+				<Paper zDepth={2}
 					style={{
 						width: '48vw',
 						textAlign: 'center',
@@ -179,7 +178,7 @@ class Home extends Component {
 					<span style={{fontSize:'3em'}}>{this.state.overall}</span>
 					<span><br/>litres</span>
 				</Paper>
-				<Paper zDepth={3}
+				<Paper zDepth={2}
 					style={{
 						width: '48vw',
 						textAlign: 'center',
@@ -197,7 +196,8 @@ class Home extends Component {
 						{day.list.map((drink, didx) =>
 								<ListItem key={`drink-${didx}`}
 									onClick={this.startTouch.bind(null, drink.id)}
-									leftAvatar={<Avatar icon={<span role="img" aria-label="beer" style={{marginTop:'.75em'}}>🍺</span>} />}
+									leftAvatar={<Avatar backgroundColor={'#718792'}
+										icon={<span role="img" aria-label="beer" style={{marginTop:'.75em'}}>🍺</span>} />}
 									primaryText={<span>{drink.ml}ml {drink.af? '(AF)' :''}</span>}
 									secondaryText={
 										<p>{moment(drink.timestamp).format("HH:mm:ss")}</p>

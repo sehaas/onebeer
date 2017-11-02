@@ -10,8 +10,14 @@ body {
 }
 
 .leaflet-container {
+	/*
 	width: 100vw;
 	height: calc(100vh - 56px);
+	*/
+	left: 0px;
+    right: 0px;
+    top: 50px;
+    bottom: 56px;
 }
 
 #root {
