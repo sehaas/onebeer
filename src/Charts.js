@@ -29,9 +29,6 @@ class Charts extends Component {
 		var weekdays = [];
 		var month = [];
 
-		var tmp = moment();
-		debugger;
-
 		for (var d=0; d<7; d++){
 			var day = moment().weekday(d).format('ddd');
 			weekdays.push({
