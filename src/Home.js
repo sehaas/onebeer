@@ -163,7 +163,7 @@ class Home extends Component {
 			nextWeek: 'dddd',
 			lastDay: '[Yesterday]',
 			lastWeek: '[Last] dddd',
-			sameElse: 'DD/MM/YYYY'
+			sameElse: 'DD. MM. YYYY'
 		};
 		return (
 			<div>
