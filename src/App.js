@@ -6,23 +6,18 @@ import {
 import { withRouter } from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MaterialIcon from 'react-google-material-icons';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
 import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import HomeIcon from 'material-ui/svg-icons/action/home';
+import PlaceIcon from 'material-ui/svg-icons/maps/place';
+import ChartIcon from 'material-ui/svg-icons/editor/insert-chart';
 
 import './App.css';
 import Home from './Home';
 import Charts from './Charts';
 import Heatmap from './Heatmap';
-
-const homeIcon = <MaterialIcon icon="home" className="material-icons" />;
-const chartsIcon = <MaterialIcon icon="insert_chart" className="material-icons"/>;
-const mapsIcon = <MaterialIcon icon="place" className="material-icons"/>;
+import ThreeDots from './ThreeDots';
 
 const keepDown = {
 	position: 'fixed',
@@ -46,17 +41,17 @@ class MainTabs extends Component {
 					<BottomNavigation selectedIndex={selectedIndex}>
 						<BottomNavigationItem
 							label="Tracking"
-							icon={homeIcon}
+							icon={<HomeIcon/>}
 							onClick={() => history.replace('/')}
 						/>
 						<BottomNavigationItem
 							label="Charts"
-							icon={chartsIcon}
+							icon={<ChartIcon/>}
 							onClick={() => history.replace('/charts')}
 						/>
 						<BottomNavigationItem
 							label="Heatmap"
-							icon={mapsIcon}
+							icon={<PlaceIcon/>}
 							onClick={() => history.replace('/heatmap')}
 						/>
 					</BottomNavigation>
@@ -67,20 +62,7 @@ class MainTabs extends Component {
 
 const MainTabsWithRouter = withRouter(MainTabs);
 
-const ThreeDots = (props) => (
-	<IconMenu
-		{...props}
-		iconButtonElement={
-			<IconButton><MoreVertIcon /></IconButton>
-		}
-		targetOrigin={{horizontal: 'right', vertical: 'top'}}
-		anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-	>
-		<MenuItem primaryText="Refresh" />
-		<MenuItem primaryText="Help" />
-		<MenuItem primaryText="Sign out" />
-	</IconMenu>
-);
+
 
 const muiTheme = getMuiTheme({
 	palette: {
@@ -107,7 +89,7 @@ class App extends Component {
 						<AppBar
 							title="onebeer"
 							showMenuIconButton={false}
-							// iconElementRight={<ThreeDots />}
+							iconElementRight={<ThreeDots />}
 							style={{
 								position: 'fixed',
 								top: '0px'

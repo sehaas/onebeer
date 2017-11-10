@@ -101,7 +101,7 @@ class Home extends Component {
 
 	startTouch(id) {
 		if (id === this.lastId) {
-			if (this.lastIdCount > 5) {
+			if (this.lastIdCount >= 2) {
 				this.lastIdCount = 0;
 				this._mounted && this.setState(updateState({ showDelete: true }));
 			} else {
@@ -155,7 +155,8 @@ class Home extends Component {
 			],
 		};
 		const moveUp = {
-			bottom: '56px'
+			bottom: '56px',
+			zIndex: 1000
 		};
 		const dayLabel = {
 			sameDay: '[Today]',
@@ -220,7 +221,7 @@ class Home extends Component {
 					actions={[
 						<FlatButton
 							label="Cancel"
-							primary={true}
+							primary={false}
 							onClick={this.handleClose}
 						/>,
 						<FlatButton

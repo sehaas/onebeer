@@ -13,20 +13,17 @@
     "leaflet-css": "^0.1.0",
     "leaflet.heat": "^0.2.0",
     "material-ui": "^0.19.4",
-    "material-ui-icons": "^1.0.0-beta.17",
     "moment": "^2.19.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-easy-chart": "github:sehaas/react-easy-chart#scatterplot_z_value",
     "react-faux-dom": "^4.0.5",
-    "react-google-material-icons": "^1.0.4",
     "react-leaflet": "^1.7.2",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.14",
     "react-speed-dial": "^0.4.6",
-    "react-tap-event-plugin": "^3.0.2",
-    "typeface-roboto": "0.0.41"
+    "react-tap-event-plugin": "^3.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
