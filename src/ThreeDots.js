@@ -68,6 +68,7 @@ class ThreeDots extends Component {
 						<b>26.11.2017</b>
 						<ul>
 							<li>Customize the "+" menu</li>
+							<li>Export Database</li>
 						</ul>
 					</div>
 

@@ -1,7 +1,17 @@
 import Dexie from 'dexie';
 
-const db = new Dexie('onebeer');
+class ImportExportDexie extends Dexie {
 
+	export() {
+		return this.transaction('r', this.tables, () => {
+			return Promise.all(
+				this.tables.map(table => table.toArray()
+					.then(rows => ({table: table.name, rows: rows}))));
+		});
+	}
+}
+
+const db = new ImportExportDexie('onebeer');
 db.version(1).stores({
 	drinks: '++id, ml, timestamp, lat, lng, af'
 });

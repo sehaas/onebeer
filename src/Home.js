@@ -159,7 +159,7 @@ class Home extends Component {
 			nextWeek: 'dddd',
 			lastDay: '[Yesterday]',
 			lastWeek: '[Last] dddd',
-			sameElse: 'DD. MM. YYYY'
+			sameElse: 'DD.MM.YYYY'
 		};
 		const colors = [amber600, amber500, amber400, amber300, amber200, amber100, amber50];
 		return (
