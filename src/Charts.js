@@ -93,7 +93,7 @@ class Charts extends Component {
 							width={this.state.width}
 							height={this.state.heightPC}
 							xType="text"
-							// yDomainRange={[0,23]}
+							yDomainRange={[0,23]}
 							dotRadius={20}
 							grid
 							margin={{top: 20, right: 0, bottom: 30, left: 30}}

@@ -7,12 +7,14 @@ import moment from 'moment';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import State from './State';
-import db from './db';
-import {getCurrentPosition, updateState} from './Helper';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
+import {amber600, amber500, amber400, amber300, amber200, amber100, amber50} from 'material-ui/styles/colors';
+
+import db from './db';
+import State from './State';
+import {getCurrentPosition, updateState} from './Helper';
 
 injectTapEventPlugin();
 
@@ -22,6 +24,7 @@ class Home extends Component {
 		super(props);
 		this.state = {
 			global: State,
+			templates: [],
 			drinks: [],
 			overall: 0.0,
 			nrDrinks: 0,
@@ -43,10 +46,21 @@ class Home extends Component {
 	async componentDidMount() { 
 		this._mounted = true;
 		this.reloadDrinks();
+		this.reloadTemplates();
 	}
 
 	componentWillUnmount() {
 		this._mounted = false;
+	}
+
+	async reloadTemplates() {
+		var templates = await db.template
+			.orderBy('order').reverse()
+			.filter((t) => t.active)
+			.toArray();
+		this._mounted && this.setState(updateState({
+			templates: templates,
+		}));
 	}
 
 	async reloadDrinks() {
@@ -75,18 +89,19 @@ class Home extends Component {
 		}));
 	}
 
-	async _trackBeer(ml, af) {
+	async _trackBeer(item) {
 		this._mounted && this.setState(updateState({
 			isSpeedDialOpen: !this.state.isSpeedDialOpen
 		}));
 		var pos = await getCurrentPosition();
 		var rld = this.reloadDrinks.bind(this);
 		db.drinks.add({
-			ml: ml,
+			ml: item.ml,
 			timestamp: new Date(),
 			lat: pos.latitude,
 			lng: pos.longitude,
-			af: af
+			af: item.af,
+			text: item.text,
 		}).then(rld, (err) => { console.log('add failed', err) });
 		this._updatePosition(pos);
 	}
@@ -134,26 +149,6 @@ class Home extends Component {
 	}
 
 	render() {
-		const that = this;
-		const list = {
-			items: [
-				{
-					primaryText: 'Halbe AF',
-					rightAvatar: <Avatar backgroundColor={'#ffd149'} icon={<ContentAdd />}/>,
-					onClick() { that._trackBeer(500, true); },
-				},
-				{
-					primaryText: 'Seidl',
-					rightAvatar: <Avatar backgroundColor={'#ffa000'} icon={<ContentAdd />}/>,
-					onClick() { that._trackBeer(330); },
-				},
-				{
-					primaryText: 'Halbe',
-					rightAvatar: <Avatar backgroundColor={'#c67100'} icon={<ContentAdd />}/>,
-					onClick() { that._trackBeer(500); },
-				},
-			],
-		};
 		const moveUp = {
 			bottom: '56px',
 			zIndex: 1000
@@ -166,6 +161,7 @@ class Home extends Component {
 			lastWeek: '[Last] dddd',
 			sameElse: 'DD. MM. YYYY'
 		};
+		const colors = [amber600, amber500, amber400, amber300, amber200, amber100, amber50];
 		return (
 			<div>
 				<Paper zDepth={2}
@@ -199,7 +195,7 @@ class Home extends Component {
 									onClick={this.startTouch.bind(null, drink.id)}
 									leftAvatar={<Avatar backgroundColor={'#718792'}
 										icon={<span role="img" aria-label="beer" style={{marginTop:'.75em'}}>🍺</span>} />}
-									primaryText={<span>{drink.ml}ml {drink.af? '(AF)' :''}</span>}
+									primaryText={<span>{drink.text} ({drink.ml}ml)</span>}
 									secondaryText={
 										<p>{moment(drink.timestamp).format("HH:mm:ss")}</p>
 									}
@@ -211,8 +207,17 @@ class Home extends Component {
 				</List>
 				<SpeedDial isOpen={this.state.isSpeedDialOpen} onChange={this.handleChangeSpeedDial} style={moveUp}>
 					<BubbleList>
-						{list.items.map((item, index) =>
-							<BubbleListItem key={index} {...item} />
+						{this.state.templates.map((item, index) =>
+							<BubbleListItem key={index}
+								primaryText={item.text}
+								rightAvatar={
+									<Avatar
+										backgroundColor={colors[Math.min(this.state.templates.length-index, colors.length)]}
+										icon={<ContentAdd />}
+									/>
+								}
+								onClick={this._trackBeer.bind(null, item)}
+							/>
 						)}
 					</BubbleList>
 				</SpeedDial>

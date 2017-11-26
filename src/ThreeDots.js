@@ -5,6 +5,8 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import WhatsNewIcon from 'material-ui/svg-icons/av/new-releases';
 
 import { updateState } from './Helper';
 
@@ -16,7 +18,6 @@ class ThreeDots extends Component {
 		}
 		this._mounted = false;
 		this._toggleWhatsNew = this._toggleWhatsNew.bind(this);
-
 	}
 
 	componentDidMount() {
@@ -34,17 +35,18 @@ class ThreeDots extends Component {
 	}
 
 	render() {
+		const { history } = this.props;
 		return (
 			<div>
 				<IconMenu
-					{...this.props}
 					iconButtonElement={
 						<IconButton><MoreVertIcon /></IconButton>
 					}
 					targetOrigin={{horizontal: 'right', vertical: 'top'}}
 					anchorOrigin={{horizontal: 'right', vertical: 'top'}}
 				>
-					<MenuItem primaryText="Whats New" onClick={this._toggleWhatsNew} />
+					<MenuItem primaryText="Settings" onClick={() => history.replace('/settings')} rightIcon={<SettingsIcon/>} />
+					<MenuItem primaryText="Whats New" onClick={this._toggleWhatsNew} rightIcon={<WhatsNewIcon/>} />
 				</IconMenu>
 
 				<Dialog
@@ -61,6 +63,13 @@ class ThreeDots extends Component {
 					onRequestClose={this._toggleWhatsNew}
 					open={this.state.showWhatsNew}
 					>
+
+					<div>
+						<b>26.11.2017</b>
+						<ul>
+							<li>Customize the "+" menu</li>
+						</ul>
+					</div>
 
 					<div>
 						<b>05.11.2017</b>

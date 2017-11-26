@@ -17,6 +17,7 @@ import './App.css';
 import Home from './Home';
 import Charts from './Charts';
 import Heatmap from './Heatmap';
+import Settings from './Settings';
 import ThreeDots from './ThreeDots';
 
 const keepDown = {
@@ -34,6 +35,7 @@ class MainTabs extends Component {
 			case '/': selectedIndex = 0; break;
 			case '/charts': selectedIndex = 1; break;
 			case '/heatmap': selectedIndex = 2; break;
+			case '/settings': selectedIndex = 3; break;
 			default: selectedIndex = 0; break;
 		}
 		return (
@@ -61,6 +63,7 @@ class MainTabs extends Component {
 }
 
 const MainTabsWithRouter = withRouter(MainTabs);
+const ThreeDotsRouter = withRouter(ThreeDots);
 
 
 
@@ -89,7 +92,7 @@ class App extends Component {
 						<AppBar
 							title="onebeer"
 							showMenuIconButton={false}
-							iconElementRight={<ThreeDots />}
+							iconElementRight={<ThreeDotsRouter />}
 							style={{
 								position: 'fixed',
 								top: '0px'
@@ -99,6 +102,7 @@ class App extends Component {
 							<Route exact path="/" component={Home}/>
 							<Route path="/charts" component={Charts}/>
 							<Route path="/heatmap" component={Heatmap}/>
+							<Route path="/settings" component={Settings}/>
 						</Switch>
 						<MainTabsWithRouter />
 					</div>
