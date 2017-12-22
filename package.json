@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://deebas.com/onebeer",
+  "homepage": "https://app.onebeer.me/",
   "dependencies": {
     "d3": "^3.5.17",
     "d3-array": "^1.2.1",
