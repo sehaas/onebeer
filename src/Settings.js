@@ -4,8 +4,10 @@ import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import Toggle from 'material-ui/Toggle';
 import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import DownloadIcon from 'material-ui/svg-icons/action/get-app';
+import UploadIcon from 'material-ui/svg-icons/file/file-upload';
 import download from 'downloadjs';
 import moment from 'moment';
 
@@ -20,12 +22,18 @@ class Settings extends Component {
 		this.state = {
 			templates: [],
 			showExport: false,
+			showImport: false,
+			errorMessage: '',
+			importJson: '',
 		};
 		this._mounted = false;
 
 		this.toggleTemplate = this.toggleTemplate.bind(this);
 		this._toggleExport = this._toggleExport.bind(this);
 		this._export = this._export.bind(this);
+		this._toggleImport = this._toggleImport.bind(this);
+		this._import = this._import.bind(this);
+		this._updateJson = this._updateJson.bind(this);
 	}
 
 	async componentDidMount() { 
@@ -57,6 +65,18 @@ class Settings extends Component {
 		}));
 	}
 
+	_toggleImport() {
+		this._mounted && this.setState(updateState({
+			showImport: !this.state.showImport
+		}));
+	}
+
+	_updateJson(event) {
+		this._mounted && this.setState(updateState({
+			importJson: event.target.value
+		}));
+	}
+
 	async _export() {
 		this._toggleExport();
 		var data = await db.export();
@@ -65,15 +85,56 @@ class Settings extends Component {
 		download(dataString, filename, "application/json");
 	}
 
+	async _import() {
+		try {
+			var data = JSON.parse(this.state.importJson);
+			var drinks = undefined;
+			if (Array.isArray(data)) {
+				drinks = data.find((elem) => elem.table === 'drinks');
+			}
+			if (drinks && drinks.rows) {
+				drinks.rows.forEach((drink) => {
+					db.drinks.add({
+						ml: drink.ml,
+						timestamp: drink.timestamp,
+						lat: drink.latitude,
+						lng: drink.longitude,
+						af: drink.af,
+						text: drink.text,
+					});
+				})
+				this._mounted && this.setState(updateState({
+					showImport: false,
+					importJson: '',
+					errorMessage: ''
+				}));
+			} else {
+				this._mounted && this.setState(updateState({
+					errorMessage: 'Could not import data. Invalid format.'
+				}));
+			}
+
+		} catch(e) {
+			this._mounted && this.setState(updateState({
+				errorMessage: e.message
+			}));
+		}
+	}
+
 	render() {
 		return (
 			<div>
 				<List>
-					<Subheader>Export</Subheader>
+					<Subheader>Export/Import</Subheader>
 					<ListItem
 						primaryText="Export Database"
 						rightIcon={<DownloadIcon />}
 						onClick={this._toggleExport}
+					/>
+					<ListItem
+						primaryText="Import Database"
+						rightIcon={<UploadIcon />}
+						onClick={this._toggleImport}
 					/>
 				</List>
 				<Divider />
@@ -115,6 +176,38 @@ class Settings extends Component {
 					>
 
 					You can export all your data and settings as a JSON file. (May not work under iOS)
+
+				</Dialog>
+
+				<Dialog
+					title="Import"
+					actions={[
+						<FlatButton
+							label="Cancel"
+							primary={false}
+							onClick={this._toggleImport}
+						/>,
+						<FlatButton
+							label="Upload"
+							primary={true}
+							onClick={this._import}
+						/>,
+					]}
+					modal={false}
+					autoScrollBodyContent={true}
+					onRequestClose={this._toggleImport}
+					open={this.state.showImport}
+					>
+
+					<TextField
+						hintText="Paste JSON Data"
+						multiLine={true}
+						rows={7}
+						rowsMax={7}
+						value={this.state.importJson}
+						onChange={this._updateJson}
+						errorText={this.state.errorMessage}
+						/>
 
 				</Dialog>
 			</div>

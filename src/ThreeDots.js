@@ -65,6 +65,13 @@ class ThreeDots extends Component {
 					>
 
 					<div>
+						<b>22.12.2017</b>
+						<ul>
+							<li>Import Database (experimental)</li>
+						</ul>
+					</div>
+
+					<div>
 						<b>26.11.2017</b>
 						<ul>
 							<li>Customize the "+" menu</li>
