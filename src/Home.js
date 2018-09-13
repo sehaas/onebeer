@@ -6,7 +6,6 @@ import Divider from 'material-ui/Divider';
 import moment from 'moment';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
@@ -15,8 +14,6 @@ import {amber600, amber500, amber400, amber300, amber200, amber100, amber50} fro
 import db from './db';
 import State from './State';
 import {getCurrentPosition, updateState} from './Helper';
-
-injectTapEventPlugin();
 
 class Home extends Component {
 
@@ -43,7 +40,7 @@ class Home extends Component {
 		this.handleClose = this.handleClose.bind(this);
 	}
 
-	async componentDidMount() { 
+	async componentDidMount() {
 		this._mounted = true;
 		this.reloadDrinks();
 		this.reloadTemplates();

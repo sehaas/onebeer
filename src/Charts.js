@@ -21,7 +21,7 @@ class Charts extends Component {
 		};
 	}
 
-	async componentDidMount() { 
+	async componentDidMount() {
 		this._mounted = true;
 
 		var drinks = await db.drinks.toArray();
@@ -37,7 +37,7 @@ class Charts extends Component {
 			});
 			for (var i=0; i<24; i++){
 				punchcard.push({
-					type: 1,
+					type: 0,
 					y: i,
 					x: day,
 					z: 0

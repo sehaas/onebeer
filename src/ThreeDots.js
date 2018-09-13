@@ -65,6 +65,14 @@ class ThreeDots extends Component {
 					>
 
 					<div>
+						<b>13.09.2018</b>
+						<ul>
+							<li>Fix import of geolocations</li>
+							<li>Upgrade libraries</li>
+						</ul>
+					</div>
+
+					<div>
 						<b>22.12.2017</b>
 						<ul>
 							<li>Import Database (experimental)</li>

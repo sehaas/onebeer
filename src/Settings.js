@@ -36,7 +36,7 @@ class Settings extends Component {
 		this._updateJson = this._updateJson.bind(this);
 	}
 
-	async componentDidMount() { 
+	async componentDidMount() {
 		this._mounted = true;
 		this.reloadTemplates();
 	}
@@ -97,8 +97,8 @@ class Settings extends Component {
 					db.drinks.add({
 						ml: drink.ml,
 						timestamp: drink.timestamp,
-						lat: drink.latitude,
-						lng: drink.longitude,
+						lat: drink.lat,
+						lng: drink.lng,
 						af: drink.af,
 						text: drink.text,
 					});
