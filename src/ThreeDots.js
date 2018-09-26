@@ -65,6 +65,13 @@ class ThreeDots extends Component {
 					>
 
 					<div>
+						<b>29.09.2018</b>
+						<ul>
+							<li>Add graph: Litres per drink-type</li>
+						</ul>
+					</div>
+
+					<div>
 						<b>13.09.2018</b>
 						<ul>
 							<li>Fix import of geolocations</li>

@@ -15,6 +15,8 @@ class Charts extends Component {
 			punchcard: [],
 			weekdays: [],
 			month:[],
+			drink:[],
+			drinkLiter: [],
 			width: 300,
 			heightPC: 500,
 			heightBar: 300,
@@ -25,9 +27,13 @@ class Charts extends Component {
 		this._mounted = true;
 
 		var drinks = await db.drinks.toArray();
+		var templates = await db.template.toArray();
 		var punchcard = [];
 		var weekdays = [];
 		var month = [];
+		var drink = [];
+		var drinkLiter = [];
+		var drinkLabel = [];
 
 		for (var d=0; d<7; d++){
 			var day = moment().weekday(d).format('ddd');
@@ -52,15 +58,30 @@ class Charts extends Component {
 			});
 		}
 
+		templates.forEach((tmp) => {
+			drinkLabel.push(tmp.text);
+			drink.push({
+				x: tmp.text,
+				y: 0
+			})
+			drinkLiter.push({
+				x: tmp.text,
+				y: 0
+			})
+		});
+
 		drinks.forEach((elem) => {
 			var date = moment(elem.timestamp);
 			var day = date.weekday();
 			var hours = date.hour();
 			var m = date.month();
 			var idx = day * 24 + hours;
-			punchcard[idx].z += elem.ml / 1000;
-			weekdays[day].y += elem.ml / 1000;
-			month[m].y += elem.ml / 1000;
+			var liter = elem.ml / 1000;
+			punchcard[idx].z += liter;
+			weekdays[day].y += liter;
+			month[m].y += liter;
+			drink[drinkLabel.indexOf(elem.text)].y += 1;
+			drinkLiter[drinkLabel.indexOf(elem.text)].y += liter;
 		});
 
 		punchcard = punchcard.filter( e => e.z > 0 || e.y > 16);
@@ -69,6 +90,8 @@ class Charts extends Component {
 			punchcard: punchcard,
 			weekdays: weekdays,
 			month: month,
+			drink: drink,
+			drinkLiter: drinkLiter,
 			width: this.refs.widthHelper.offsetWidth - 50,
 		}));
 	}
@@ -129,6 +152,26 @@ class Charts extends Component {
 					<CardText expandable={true}>
 						<BarChart
 							data={this.state.month}
+							colorBars
+							axes
+							axisLabels={{y: 'litres'}}
+							width={this.state.width}
+							height={this.state.heightBar}
+							xType="text"
+							grid
+							margin={{top: 10, right: 0, bottom: 30, left: 50}}
+						/>
+					</CardText>
+				</Card>
+				<Card initiallyExpanded={true}>
+					<CardHeader
+						title="Drink"
+						actAsExpander={true}
+						showExpandableButton={true}
+					/>
+					<CardText expandable={true}>
+						<BarChart
+							data={this.state.drinkLiter}
 							colorBars
 							axes
 							axisLabels={{y: 'litres'}}
