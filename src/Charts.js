@@ -84,7 +84,7 @@ class Charts extends Component {
 			drinkLiter[drinkLabel.indexOf(elem.text)].y += liter;
 		});
 
-		punchcard = punchcard.filter( e => e.z > 0 || e.y > 16);
+		punchcard = punchcard.filter( e => e.z > 0 );
 
 		this._mounted && this.setState(updateState({
 			punchcard: punchcard,
