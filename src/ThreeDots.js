@@ -65,6 +65,14 @@ class ThreeDots extends Component {
 					>
 
 					<div>
+						<b>28.10.2018</b>
+						<ul>
+							<li>Add graph: barchart for each day of a year</li>
+							<li>Add longest streak / break</li>
+						</ul>
+					</div>
+
+					<div>
 						<b>29.09.2018</b>
 						<ul>
 							<li>Add graph: Litres per drink-type</li>
