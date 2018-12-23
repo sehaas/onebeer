@@ -82,7 +82,7 @@ class Home extends Component {
 		});
 		this._mounted && this.setState(this.updateState({
 			drinks: drinks,
-			overall: overall / 1000,
+			overall: Math.round(overall / 10) / 100,
 			nrDrinks: nrDrinks
 		}));
 	}
@@ -193,7 +193,7 @@ class Home extends Component {
 									onClick={this.startTouch.bind(null, drink.id)}
 									leftAvatar={<Avatar backgroundColor={'#718792'}
 										icon={<span role="img" aria-label="beer" style={{marginTop:'.75em'}}>🍺</span>} />}
-									primaryText={<span>{drink.text} ({drink.ml}ml)</span>}
+									primaryText={<span>{drink.text} ({Math.round(drink.ml)}ml)</span>}
 									secondaryText={
 										<p>{moment(drink.timestamp).format("HH:mm:ss")}</p>
 									}
