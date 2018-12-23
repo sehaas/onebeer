@@ -21,6 +21,7 @@ class Heatmap extends Component {
 			global: State,
 			zoom: 13
 		};
+		this.updateState = updateState.bind(null, this);
 	}
 
 	_renderHeatmapData(drinks) {
@@ -36,7 +37,7 @@ class Heatmap extends Component {
 			lat: pos.latitude,
 			lng: pos.longitude
 		}
-		this._mounted && this.setState(updateState({ global: State }));
+		this._mounted && this.setState(this.updateState({ global: State }));
 	}
 
 	async componentDidMount() {
@@ -45,7 +46,7 @@ class Heatmap extends Component {
 		this._renderHeatmapData(drinks);
 		var pos = await getCurrentPosition();
 		this._updatePosition(pos);
-		this._mounted && this.setState(updateState({ drinks: drinks }));
+		this._mounted && this.setState(this.updateState({ drinks: drinks }));
 	}
 
 	componentWillUnmount() {

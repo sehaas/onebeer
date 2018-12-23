@@ -34,6 +34,7 @@ class Settings extends Component {
 		this._toggleImport = this._toggleImport.bind(this);
 		this._import = this._import.bind(this);
 		this._updateJson = this._updateJson.bind(this);
+		this.updateState = updateState.bind(null, this);
 	}
 
 	async componentDidMount() {
@@ -49,7 +50,7 @@ class Settings extends Component {
 		var templates = await db.template
 			.orderBy('order')
 			.toArray();
-		this._mounted && this.setState(updateState({
+		this._mounted && this.setState(this.updateState({
 			templates: templates,
 		}));
 	}
@@ -60,19 +61,19 @@ class Settings extends Component {
 	}
 
 	_toggleExport() {
-		this._mounted && this.setState(updateState({
+		this._mounted && this.setState(this.updateState({
 			showExport: !this.state.showExport
 		}));
 	}
 
 	_toggleImport() {
-		this._mounted && this.setState(updateState({
+		this._mounted && this.setState(this.updateState({
 			showImport: !this.state.showImport
 		}));
 	}
 
 	_updateJson(event) {
-		this._mounted && this.setState(updateState({
+		this._mounted && this.setState(this.updateState({
 			importJson: event.target.value
 		}));
 	}
@@ -103,19 +104,19 @@ class Settings extends Component {
 						text: drink.text,
 					});
 				})
-				this._mounted && this.setState(updateState({
+				this._mounted && this.setState(this.updateState({
 					showImport: false,
 					importJson: '',
 					errorMessage: ''
 				}));
 			} else {
-				this._mounted && this.setState(updateState({
+				this._mounted && this.setState(this.updateState({
 					errorMessage: 'Could not import data. Invalid format.'
 				}));
 			}
 
 		} catch(e) {
-			this._mounted && this.setState(updateState({
+			this._mounted && this.setState(this.updateState({
 				errorMessage: e.message
 			}));
 		}

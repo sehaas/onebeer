@@ -18,6 +18,7 @@ class ThreeDots extends Component {
 		}
 		this._mounted = false;
 		this._toggleWhatsNew = this._toggleWhatsNew.bind(this);
+		this.updateState = updateState.bind(null, this);
 	}
 
 	componentDidMount() {
@@ -29,7 +30,7 @@ class ThreeDots extends Component {
 	}
 
 	_toggleWhatsNew() {
-		this._mounted && this.setState(updateState({
+		this._mounted && this.setState(this.updateState({
 			showWhatsNew: !this.state.showWhatsNew
 		}));
 	}

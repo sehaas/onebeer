@@ -28,6 +28,7 @@ class Charts extends Component {
 			heightPC: 500,
 			heightBar: 300,
 		};
+		this.updateState = updateState.bind(null, this);
 	}
 
 	async componentDidMount() {
@@ -126,7 +127,7 @@ class Charts extends Component {
 
 		punchcard = punchcard.filter( e => e.z > 0 );
 
-		this._mounted && this.setState(updateState({
+		this._mounted && this.setState(this.updateState({
 			punchcard: punchcard,
 			weekdays: weekdays,
 			month: month,

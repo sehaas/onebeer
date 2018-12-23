@@ -38,6 +38,7 @@ class Home extends Component {
 		this.lastIdCount = 0;
 		this.startTouch = this.startTouch.bind(this);
 		this.handleClose = this.handleClose.bind(this);
+		this.updateState = updateState.bind(null, this);
 	}
 
 	async componentDidMount() {
@@ -55,7 +56,7 @@ class Home extends Component {
 			.orderBy('order').reverse()
 			.filter((t) => t.active)
 			.toArray();
-		this._mounted && this.setState(updateState({
+		this._mounted && this.setState(this.updateState({
 			templates: templates,
 		}));
 	}
@@ -79,7 +80,7 @@ class Home extends Component {
 		Object.keys(data).reverse().forEach((elem, idx) => {
 			drinks.push(data[elem]);
 		});
-		this._mounted && this.setState(updateState({
+		this._mounted && this.setState(this.updateState({
 			drinks: drinks,
 			overall: overall / 1000,
 			nrDrinks: nrDrinks
@@ -87,7 +88,7 @@ class Home extends Component {
 	}
 
 	async _trackBeer(item) {
-		this._mounted && this.setState(updateState({
+		this._mounted && this.setState(this.updateState({
 			isSpeedDialOpen: !this.state.isSpeedDialOpen
 		}));
 		var pos = await getCurrentPosition();
@@ -115,7 +116,7 @@ class Home extends Component {
 		if (id === this.lastId) {
 			if (this.lastIdCount >= 2) {
 				this.lastIdCount = 0;
-				this._mounted && this.setState(updateState({ showDelete: true }));
+				this._mounted && this.setState(this.updateState({ showDelete: true }));
 			} else {
 				this.lastIdCount++;
 			}
@@ -126,7 +127,7 @@ class Home extends Component {
 	}
 
 	handleClose() {
-		this._mounted && this.setState(updateState({ showDelete: false }));
+		this._mounted && this.setState(this.updateState({ showDelete: false }));
 	}
 
 	_updatePosition(pos) {
@@ -134,7 +135,7 @@ class Home extends Component {
 			lat: pos.latitude,
 			lng: pos.longitude
 		};
-		this._mounted && this.setState(updateState({ global: State }));
+		this._mounted && this.setState(this.updateState({ global: State }));
 	}
 
 	_error(err) {
@@ -142,7 +143,7 @@ class Home extends Component {
 	}
 
 	handleChangeSpeedDial({ isOpen }) {
-		this.setState(updateState({isSpeedDialOpen: isOpen}));
+		this.setState(this.updateState({isSpeedDialOpen: isOpen}));
 	}
 
 	render() {

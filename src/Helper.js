@@ -35,8 +35,8 @@ const getCurrentPosition = () => {
 	});
 };
 
-const updateState = (data) => {
-	return Object.assign({}, this.state, data);
+const updateState = (that, data) => {
+	return Object.assign({}, that.state, data);
 };
 
 export {getCurrentPosition, makeCancelable, updateState};
