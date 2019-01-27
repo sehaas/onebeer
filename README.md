@@ -13,6 +13,24 @@ Track and visualize your drinks.
 ## Requirements
 
 Access to fine location is needed to log your drinks.
+The app must be served via HTTPS, because of `navigator.geolocation`.
+
+## Development
+
+Start development server with HTTPS support.
+```
+HTTPS=true npm start
+```
+
+## Release
+
+Change `homepage` in [package.json](package.json) to your deployment location.
+
+Generate build and deploy to webserver
+```
+npm run build
+rsync -avt --delete build/ <HOST>:<DOCROOT>
+```
 
 ## Versioning
 
