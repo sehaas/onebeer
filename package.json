@@ -1,5 +1,11 @@
 {
-  "name": "client",
+  "name": "onebeer",
+  "decription": "track your drinks",
+  "author": "Sebstian Haas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sehaas/onebeer/issues"
+  },
   "version": "0.1.2",
   "private": true,
   "homepage": "https://app.onebeer.me/",
