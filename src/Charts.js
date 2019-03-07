@@ -101,7 +101,7 @@ class Charts extends Component {
 		var longestStreak = drinks.length > 0
 			? { cnt: 1, day: moment(drink[0].timestamp).format('DD.MM.YYYY')}
 			: { cnt: 0, day: null };
-		var tmpDrinks = d3.pairs(drinks, (a, b) => {
+		var tmpDrinks = d3.pairs(drinks.concat([{ timestamp: moment() }]), (a, b) => {
 			var aDay = moment(a.timestamp).endOf('day');
 			var aDoy = aDay.dayOfYear();
 			var bDay = moment(b.timestamp).startOf('day');
