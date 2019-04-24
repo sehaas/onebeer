@@ -23,3 +23,7 @@ body {
 #root {
 	margin-bottom: 56px;
 }
+
+#importText {
+    -webkit-user-select: all;
+}

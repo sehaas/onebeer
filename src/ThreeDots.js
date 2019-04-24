@@ -66,6 +66,13 @@ class ThreeDots extends Component {
 					>
 
 					<div>
+						<b>24.04.2019</b>
+						<ul>
+							<li>Fix Import on iPhones</li>
+						</ul>
+					</div>
+
+					<div>
 						<b>23.12.2018</b>
 						<ul>
 							<li>Add Pints</li>

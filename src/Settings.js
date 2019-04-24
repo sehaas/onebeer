@@ -56,7 +56,6 @@ class Settings extends Component {
 	}
 
 	toggleTemplate(tmpl, event, val) {
-		console.log(tmpl.text, val);
 		db.template.update(tmpl.id, {active: val});
 	}
 
@@ -201,6 +200,7 @@ class Settings extends Component {
 					>
 
 					<TextField
+						id="importText"
 						hintText="Paste JSON Data"
 						multiLine={true}
 						rows={7}
