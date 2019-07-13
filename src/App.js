@@ -84,6 +84,15 @@ const muiTheme = getMuiTheme({
 });
 
 class App extends Component {
+	constructor() {
+		super();
+		this._applyFilter = this._applyFilter.bind(this);
+	}
+
+	_applyFilter() {
+		this.forceUpdate();
+	}
+
 	render() {
 		return (
 			<MuiThemeProvider muiTheme={muiTheme}>
@@ -92,7 +101,7 @@ class App extends Component {
 						<AppBar
 							title="onebeer"
 							showMenuIconButton={false}
-							iconElementRight={<ThreeDotsRouter />}
+							iconElementRight={<ThreeDotsRouter applyFilter={this._applyFilter} />}
 							style={{
 								position: 'fixed',
 								top: '0px'

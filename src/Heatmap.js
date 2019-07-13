@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import State from './State';
 import db from './db';
-import { getCurrentPosition, updateState } from './Helper';
+import { getCurrentPosition, updateState, getFilter } from './Helper';
 import 'leaflet/dist/leaflet.css';
 import { Map, TileLayer, Marker, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
@@ -9,27 +9,41 @@ import 'leaflet.heat';
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+	iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+	iconUrl: require('leaflet/dist/images/marker-icon.png'),
+	shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
 class Heatmap extends Component {
 	constructor(props) {
 		super(props);
+		this.layer = null;
 		this.state = {
 			global: State,
-			zoom: 13
+			zoom: 18
 		};
 		this.updateState = updateState.bind(null, this);
 	}
 
-	_renderHeatmapData(drinks) {
+	componentWillReceiveProps(props) {
+		this._renderHeatmapData();
+	}
+
+	async _renderHeatmapData() {
+		var filter = await getFilter(db);
+		var drinks = filter != null
+			? (await db.drinks.where('timestamp').between(filter.start, filter.end, true, true).toArray()).reverse()
+			: (await db.drinks.toArray()).reverse();
 		var data = [];
 		drinks.forEach(function(itm, idx) {
 			data.push([itm.lat, itm.lng]);
 		});
-		this._mounted && L.heatLayer(data, {radius: 25, minOpacity: 0.3}).addTo(this.refs.map.leafletElement);
+		if (this._mounted) {
+			if (this.layer != null)
+				this.refs.map.leafletElement.removeLayer(this.layer);
+			this.layer = L.heatLayer(data, {radius: 25, minOpacity: 0.3}).addTo(this.refs.map.leafletElement);
+			this.setState(this.updateState({ drinks: drinks }));
+		}
 	}
 
 	_updatePosition(pos) {
@@ -42,11 +56,9 @@ class Heatmap extends Component {
 
 	async componentDidMount() {
 		this._mounted = true;
-		var drinks = (await db.drinks.toArray()).reverse();
-		this._renderHeatmapData(drinks);
+		this._renderHeatmapData();
 		var pos = await getCurrentPosition();
 		this._updatePosition(pos);
-		this._mounted && this.setState(this.updateState({ drinks: drinks }));
 	}
 
 	componentWillUnmount() {

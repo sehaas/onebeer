@@ -13,7 +13,7 @@ import {amber600, amber500, amber400, amber300, amber200, amber100, amber50} fro
 
 import db from './db';
 import State from './State';
-import {getCurrentPosition, updateState} from './Helper';
+import {getCurrentPosition, updateState, getFilter} from './Helper';
 
 class Home extends Component {
 
@@ -47,6 +47,10 @@ class Home extends Component {
 		this.reloadTemplates();
 	}
 
+	componentWillReceiveProps(props) {
+		this.reloadDrinks();
+	}
+
 	componentWillUnmount() {
 		this._mounted = false;
 	}
@@ -62,7 +66,10 @@ class Home extends Component {
 	}
 
 	async reloadDrinks() {
-		var drinks = (await db.drinks.toArray()).reverse();
+		var filter = await getFilter(db);
+		var drinks = filter != null
+			? (await db.drinks.where('timestamp').between(filter.start, filter.end, true,true).toArray()).reverse()
+			: (await db.drinks.toArray()).reverse();
 		var overall = 0;
 		var nrDrinks = drinks.length;
 		var data = drinks.reduce((l, e) => {

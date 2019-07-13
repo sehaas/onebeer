@@ -96,7 +96,7 @@ class Settings extends Component {
 				drinks.rows.forEach((drink) => {
 					db.drinks.add({
 						ml: drink.ml,
-						timestamp: drink.timestamp,
+						timestamp: new Date(drink.timestamp),
 						lat: drink.lat,
 						lng: drink.lng,
 						af: drink.af,

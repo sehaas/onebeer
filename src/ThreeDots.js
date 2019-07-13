@@ -1,23 +1,35 @@
 import React, { Component } from 'react';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
+import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import FilterListIcon from 'material-ui/svg-icons/content/filter-list';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import WhatsNewIcon from 'material-ui/svg-icons/av/new-releases';
 
-import { updateState } from './Helper';
+import db from './db';
+import { updateState, getFilter } from './Helper';
 
 class ThreeDots extends Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
+			selectedYear: null,
+			years : [],
 			showWhatsNew: false,
+			showFilter: false
 		}
+
 		this._mounted = false;
 		this._toggleWhatsNew = this._toggleWhatsNew.bind(this);
+		this._openFilterDialog = this._openFilterDialog.bind(this);
+		this._closeFilterDialog = this._closeFilterDialog.bind(this);
+		this._applyFilterDialog = this._applyFilterDialog.bind(this);
+		this._handleChange = this._handleChange.bind(this);
 		this.updateState = updateState.bind(null, this);
 	}
 
@@ -31,7 +43,47 @@ class ThreeDots extends Component {
 
 	_toggleWhatsNew() {
 		this._mounted && this.setState(this.updateState({
-			showWhatsNew: !this.state.showWhatsNew
+			showWhatsNew: !this.state.showWhatsNew,
+		}));
+	}
+
+	async _openFilterDialog() {
+		var filter = await getFilter(db) || {year: null};
+		var yearStart = (await db.drinks.orderBy('timestamp').limit(1).first(f => f ? f.timestamp : new Date())).getFullYear();
+		var yearCurr = new Date().getFullYear();
+		var years = [];
+		for (var i = yearCurr; i >= yearStart; i--) {
+			years.push(i);
+		}
+		this._mounted && this.setState(this.updateState({
+			showFilter: true,
+			selectedYear: filter.year,
+			years : years
+		}));
+	}
+
+	async _applyFilterDialog() {
+		await db.settings.where({key:'yearFilter'}).modify((val, ref) => delete ref.value);
+		await db.settings.add({
+			key:'yearFilter',
+			value: this.state.selectedYear
+		});
+		this._mounted && this.setState(this.updateState({
+			showFilter: false
+		}));
+		this.props.applyFilter();
+	}
+
+	_closeFilterDialog() {
+		this._mounted && this.setState(this.updateState({
+			showWhatsNew: this.state.showWhatsNew,
+			showFilter: false
+		}));
+	}
+
+	async _handleChange(event, idx, year) {
+		this._mounted && this.setState(this.updateState({
+			selectedYear: year
 		}));
 	}
 
@@ -39,6 +91,10 @@ class ThreeDots extends Component {
 		const { history } = this.props;
 		return (
 			<div>
+				<IconButton onClick={this._openFilterDialog} >
+					<FilterListIcon />
+				</IconButton>
+
 				<IconMenu
 					iconButtonElement={
 						<IconButton><MoreVertIcon /></IconButton>
@@ -50,6 +106,30 @@ class ThreeDots extends Component {
 					<MenuItem primaryText="Whats New" onClick={this._toggleWhatsNew} rightIcon={<WhatsNewIcon/>} />
 				</IconMenu>
 
+				<Dialog
+					title="Filter Time Range"
+					modal={true}
+					open={this.state.showFilter}
+					actions={[
+						<FlatButton
+							label="Cancel"
+							onClick={this._closeFilterDialog}
+						/>,
+						<FlatButton
+							label="OK"
+							primary={true}
+							onClick={this._applyFilterDialog}
+						/>
+					]}
+					>
+					<SelectField floatingLabelText="Filter by year"
+						value={this.state.selectedYear} onChange={this._handleChange}>
+						<MenuItem value={null} label=" " primaryText="no filter" />
+						{this.state.years.map(y =>
+							<MenuItem key={y} value={y} primaryText={y} />
+						)}
+					</SelectField>
+				</Dialog>
 				<Dialog
 					title="Whats New"
 					actions={[
@@ -64,6 +144,13 @@ class ThreeDots extends Component {
 					onRequestClose={this._toggleWhatsNew}
 					open={this.state.showWhatsNew}
 					>
+
+					<div>
+						<b>13.07.2019</b>
+						<ul>
+							<li>Add year filter</li>
+						</ul>
+					</div>
 
 					<div>
 						<b>24.04.2019</b>

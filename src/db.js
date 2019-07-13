@@ -32,6 +32,12 @@ db.version(2).stores({
 
 db.version(3).upgrade(() => {});
 db.version(4).upgrade(() => {});
+db.version(5).upgrade(() => {});
+db.version(6).upgrade((trans) => {
+	return trans.drinks.toCollection().modify(d => {
+		d.timestamp = new Date(d.timestamp);
+	});
+});
 
 db.on('ready', function() {
 	return db.template.count(function(count){
@@ -43,7 +49,7 @@ db.on('ready', function() {
 		if (count === 6) {
 			console.log('init pints');
 			return db.template.add(
-				{ text: "Pint", ml: 568.26125, af: false, order: 6, active: false }
+				{ text: "Pint", 	ml: 568.26125, af: false, order: 6, active: false }
 			);
 		}
 
@@ -56,7 +62,7 @@ db.on('ready', function() {
 				{ text: "Radler Seidl",	ml: 330, af: false,	order: 3, active: false	},
 				{ text: "Sparkling",	ml: 250, af: false,	order: 4, active: false	},
 				{ text: "Halbe AF",		ml: 500, af: true,	order: 5, active: true	},
-				{ text: "Pint",		ml: 568.26125, af: false, order: 6, active: false }
+				{ text: "Pint",			ml: 568.26125, af: false, order: 6, active: false }
 			]);
 		}
 	});

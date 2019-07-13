@@ -4,7 +4,7 @@ class State {
 		if (!state_instance) {
 			state_instance = this;
 			this.tenant = undefined;
-			this.coords= {
+			this.coords = {
 				lat: 48.305,
 				lng: 14.285
 			};

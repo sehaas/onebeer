@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import db from './db';
 import State from './State';
-import { updateState } from './Helper';
+import { updateState, getFilter } from './Helper';
 import { ScatterplotChart, BarChart } from 'react-easy-chart';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import Paper from 'material-ui/Paper';
@@ -31,10 +31,21 @@ class Charts extends Component {
 		this.updateState = updateState.bind(null, this);
 	}
 
-	async componentDidMount() {
+	componentDidMount() {
 		this._mounted = true;
+		this.reloadCharts();
+	}
 
-		var drinks = await db.drinks.toArray();
+	componentWillReceiveProps(props) {
+		this.reloadCharts();
+	}
+
+	async reloadCharts() {
+		var filter = await getFilter(db);
+
+		var drinks = filter != null
+			? await db.drinks.where('timestamp').between(filter.start, filter.end).toArray()
+			: await db.drinks.toArray();
 		var templates = await db.template.toArray();
 		var punchcard = [];
 		var weekdays = [];
@@ -101,7 +112,8 @@ class Charts extends Component {
 		var longestStreak = drinks.length > 0
 			? { cnt: 1, day: moment(drink[0].timestamp).format('DD.MM.YYYY')}
 			: { cnt: 0, day: null };
-		var tmpDrinks = d3.pairs(drinks.concat([{ timestamp: moment() }]), (a, b) => {
+		var lastBreakDay = filter != null ? moment.min(moment(filter.end), moment()) : moment();
+		var tmpDrinks = d3.pairs(drinks.concat([{ timestamp: lastBreakDay }]), (a, b) => {
 			var aDay = moment(a.timestamp).endOf('day');
 			var aDoy = aDay.dayOfYear();
 			var bDay = moment(b.timestamp).startOf('day');
