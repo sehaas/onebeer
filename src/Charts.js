@@ -57,7 +57,7 @@ class Charts extends Component {
 		var drinkLiter = [];
 		var drinkLabel = [];
 
-		for (var d=0; d<7; d++){
+		for (var d=1; d<=7; d++){
 			var day = moment().weekday(d).format('ddd');
 			weekdays.push({
 				x: day,
@@ -94,7 +94,7 @@ class Charts extends Component {
 
 		drinks.forEach((elem) => {
 			var date = moment(elem.timestamp);
-			var day = date.weekday();
+			var day = (date.weekday() + 6) % 7;
 			var hours = date.hour();
 			var m = date.month();
 			var d = date.dayOfYear();
