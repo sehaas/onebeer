@@ -10,23 +10,23 @@
   "private": true,
   "homepage": "https://app.onebeer.me/",
   "dependencies": {
-    "d3": "^5.9.2",
+    "d3": "^5.12.0",
     "dexie": "^2.0.4",
     "downloadjs": "^1.4.7",
-    "leaflet": "^1.4.0",
+    "leaflet": "^1.5.1",
     "leaflet-css": "^0.1.0",
     "leaflet.heat": "^0.2.0",
     "material-ui": "^0.19.4",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
     "react-easy-chart": "github:sehaas/react-easy-chart#scatterplot_z_value_1.0",
     "react-faux-dom": "^4.5.0",
-    "react-leaflet": "^2.2.1",
+    "react-leaflet": "^2.4.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^3.0.0",
+    "react-scripts": "^3.2.0",
     "react-speed-dial": "^0.5.2"
   },
   "scripts": {
@@ -40,6 +40,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "typescript": "^3.5.3"
+    "typescript": "^3.6.3"
   }
 }
