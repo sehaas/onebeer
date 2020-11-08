@@ -46,7 +46,6 @@ class Charts extends Component {
 		var drinks = filter != null
 			? await db.drinks.where('timestamp').between(filter.start, filter.end).toArray()
 			: await db.drinks.toArray();
-		var templates = await db.template.toArray();
 		var punchcard = [];
 		var weekdays = [];
 		var month = [];
@@ -80,18 +79,6 @@ class Charts extends Component {
 			});
 		}
 
-		templates.forEach((tmp) => {
-			drinkLabel.push(tmp.text);
-			drink.push({
-				x: tmp.text,
-				y: 0
-			})
-			drinkLiter.push({
-				x: tmp.text,
-				y: 0
-			})
-		});
-
 		drinks.forEach((elem) => {
 			var date = moment(elem.timestamp);
 			var day = (date.weekday() + 6) % 7;
@@ -104,13 +91,19 @@ class Charts extends Component {
 			weekdays[day].y += liter;
 			month[m].y += liter;
 			year[d - 1].y += liter;
-			drink[drinkLabel.indexOf(elem.text)].y += 1;
+			if (drinkLabel.indexOf(elem.text) -1) {
+				drinkLabel.push(elem.text);
+				drinkLiter.push({
+					x: elem.text,
+					y: 0
+				});
+			}
 			drinkLiter[drinkLabel.indexOf(elem.text)].y += liter;
 		});
 
 		var curStreak = 1;
 		var longestStreak = drinks.length > 0
-			? { cnt: 1, day: moment(drink[0].timestamp).format('DD.MM.YYYY')}
+			? { cnt: 1, day: moment(drinks[0].timestamp).format('DD.MM.YYYY')}
 			: { cnt: 0, day: null };
 		var lastBreakDay = filter != null ? moment.min(moment(filter.end), moment()) : moment();
 		var tmpDrinks = d3.pairs(drinks.concat([{ timestamp: lastBreakDay }]), (a, b) => {
