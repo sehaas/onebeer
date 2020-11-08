@@ -6,8 +6,10 @@ import Toggle from 'material-ui/Toggle';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
 import DownloadIcon from 'material-ui/svg-icons/action/get-app';
 import UploadIcon from 'material-ui/svg-icons/file/file-upload';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import download from 'downloadjs';
 import moment from 'moment';
 
@@ -23,18 +25,24 @@ class Settings extends Component {
 			templates: [],
 			showExport: false,
 			showImport: false,
+			showEditDrink: false,
 			errorMessage: '',
 			importJson: '',
+			currentTemplate: {},
 		};
 		this._mounted = false;
 
-		this.toggleTemplate = this.toggleTemplate.bind(this);
 		this._toggleExport = this._toggleExport.bind(this);
 		this._export = this._export.bind(this);
 		this._toggleImport = this._toggleImport.bind(this);
 		this._import = this._import.bind(this);
 		this._updateJson = this._updateJson.bind(this);
 		this.updateState = updateState.bind(null, this);
+		this._newDrink = this._newDrink.bind(this);
+		this._editDrink = this._editDrink.bind(this);
+		this._saveDrink = this._saveDrink.bind(this);
+		this._deleteDrink = this._deleteDrink.bind(this);
+		this._updateTemplate = this._updateTemplate.bind(this);
 	}
 
 	async componentDidMount() {
@@ -55,10 +63,6 @@ class Settings extends Component {
 		}));
 	}
 
-	toggleTemplate(tmpl, event, val) {
-		db.template.update(tmpl.id, {active: val});
-	}
-
 	_toggleExport() {
 		this._mounted && this.setState(this.updateState({
 			showExport: !this.state.showExport
@@ -75,6 +79,64 @@ class Settings extends Component {
 		this._mounted && this.setState(this.updateState({
 			importJson: event.target.value
 		}));
+	}
+
+	_newDrink() {
+		this._mounted && this.setState(this.updateState({
+			currentTemplate: {
+				text: 'Drink',
+				ml: 500,
+				af: false,
+				active: true,
+				order: 99
+			},
+			showEditDrink: true,
+			showDeleteDrink: false
+		}))
+	}
+
+	_editDrink(tmpl) {
+		this._mounted && this.setState(this.updateState({
+			currentTemplate: tmpl,
+			showEditDrink: true,
+			showDeleteDrink: true
+		}));
+	}
+
+	async _deleteDrink(tmpl) {
+		await db.template.delete(this.state.currentTemplate.id);
+		this._mounted && this.setState(this.updateState({
+			showEditDrink: false
+		}));
+		this.reloadTemplates();
+	}
+
+	_updateTemplate(event, value) {
+		var target = event.target.id;
+		if (target === 'ml' | target === 'order') {
+			value = Number(value);
+		}
+		var tmpl = this.state.currentTemplate;
+		tmpl[target] = value;
+		this._mounted && this.setState(this.updateState({
+			currentTemplate: tmpl
+		}));
+	}
+
+	async _saveDrink(save) {
+		if (save) {
+			var tmpl = this.state.currentTemplate;
+			if (tmpl.id) {
+				await db.template.update(tmpl.id, tmpl);
+			} else {
+				await db.template.add(tmpl);
+			}
+		}
+
+		this._mounted && this.setState(this.updateState({
+			showEditDrink: false
+		}));
+		this.reloadTemplates();
 	}
 
 	async _export() {
@@ -139,16 +201,22 @@ class Settings extends Component {
 				</List>
 				<Divider />
 				<List>
-					<Subheader>Configuration '+' Menu</Subheader>
+					<Subheader>
+						Configuration '+' Menu
+						<FlatButton
+							label="Add New..."
+							primary={true}
+							onClick={this._newDrink}
+							/>
+					</Subheader>
 					{this.state.templates.map((tmpl, idx) =>
 						<ListItem key={`tmpl-${idx}`}
 							primaryText={<span>{tmpl.text}</span>}
-							secondaryText={<p>{tmpl.ml}ml{tmpl.af ? ", alcohol free" : ""}</p>}
-							rightToggle={
-								<Toggle
-									defaultToggled={tmpl.active}
-									onToggle={this.toggleTemplate.bind(null, tmpl)}
-								/>
+							secondaryText={<p>{tmpl.ml}ml{tmpl.af ? ", alcohol free" : ""}{tmpl.active ? "" : ", inactive"}</p>}
+							rightIconButton={
+								<IconButton onClick={() => this._editDrink(tmpl)} >
+									<SettingsIcon/>
+								</IconButton>
 							}
 						/>
 					)}
@@ -210,6 +278,69 @@ class Settings extends Component {
 						errorText={this.state.errorMessage}
 						/>
 
+				</Dialog>
+
+				<Dialog
+					title="Edit drink"
+					modal={false}
+					autoScrollBodyContent={true}
+					onRequestClose={this._toggleEditDrink}
+					open={this.state.showEditDrink}
+					actions={[
+						<FlatButton
+							label="Delete"
+							primary={false}
+							disabled={!this.state.showDeleteDrink}
+							onClick={this._deleteDrink}
+						/>,
+						<FlatButton
+							label="Cancel"
+							primary={false}
+							onClick={() => this._saveDrink(false)}
+						/>,
+						<FlatButton
+							label="Save"
+							primary={true}
+							onClick={() => this._saveDrink(true)}
+						/>,
+					]}
+					>
+
+					<TextField
+						id="text"
+						floatingLabelText="Name"
+						fullWidth={true}
+						value={this.state.currentTemplate.text}
+						onChange={this._updateTemplate}
+						/>
+					<TextField
+						id="ml"
+						floatingLabelText="Millilitre"
+						type="number"
+						fullWidth={true}
+						value={this.state.currentTemplate.ml}
+						onChange={this._updateTemplate}
+						/>
+					<Toggle
+						id="active"
+						label="Show in Menu"
+						defaultToggled={this.state.currentTemplate.active}
+						onToggle={this._updateTemplate}
+						/>
+					<Toggle
+						id="af"
+						label="Alcohol free"
+						defaultToggled={this.state.currentTemplate.af}
+						onToggle={this._updateTemplate}
+						/>
+					<TextField
+						id="order"
+						floatingLabelText="Sort order"
+						type="number"
+						fullWidth={true}
+						value={this.state.currentTemplate.order}
+						onChange={this._updateTemplate}
+						/>
 				</Dialog>
 			</div>
 		);
