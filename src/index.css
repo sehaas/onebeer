@@ -24,6 +24,9 @@ body {
 	margin-bottom: 56px;
 }
 
-#importText {
+#importText,
+#order,
+#text,
+#ml {
     -webkit-user-select: all;
 }
