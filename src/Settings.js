@@ -151,10 +151,12 @@ class Settings extends Component {
 		try {
 			var data = JSON.parse(this.state.importJson);
 			var drinks = undefined;
+			var templates = undefined;
 			if (Array.isArray(data)) {
 				drinks = data.find((elem) => elem.table === 'drinks');
+				templates = data.find((elem) => elem.table === 'template');
 			}
-			if (drinks && drinks.rows) {
+			if (drinks && drinks.rows && templates && templates.rows) {
 				drinks.rows.forEach((drink) => {
 					db.drinks.add({
 						ml: drink.ml,
@@ -165,6 +167,8 @@ class Settings extends Component {
 						text: drink.text,
 					});
 				})
+				await db.template.clear();
+				await db.template.bulkAdd(templates.rows);
 				this._mounted && this.setState(this.updateState({
 					showImport: false,
 					importJson: '',
