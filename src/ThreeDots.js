@@ -146,6 +146,13 @@ class ThreeDots extends Component {
 				>
 
 					<div>
+						<b>10.02.2021</b>
+						<ul>
+							<li>Edit tracked drinks</li>
+						</ul>
+					</div>
+
+					<div>
 						<b>08.11.2020</b>
 						<ul>
 							<li>Customize trackable drinks</li>
