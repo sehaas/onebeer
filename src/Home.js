@@ -7,6 +7,9 @@ import moment from 'moment';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
 import Dialog from 'material-ui/Dialog';
+import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
+import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
 import { amber600, amber500, amber400, amber300, amber200, amber100, amber50 } from 'material-ui/styles/colors';
@@ -26,7 +29,8 @@ class Home extends Component {
 			overall: 0.0,
 			nrDrinks: 0,
 			isSpeedDialOpen: false,
-			showDelete: false,
+			showEdit: false,
+			selectedDrink: {},
 		};
 
 		this._updatePosition = this._updatePosition.bind(this);
@@ -39,6 +43,10 @@ class Home extends Component {
 		this.startTouch = this.startTouch.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.updateState = updateState.bind(null, this);
+		this._updateDate = this._updateDate.bind(this);
+		this._updateTime = this._updateTime.bind(this);
+		this._updateDrinkPosition = this._updateDrinkPosition.bind(this);
+		this._saveDrink = this._saveDrink.bind(this);
 	}
 
 	async componentDidMount() {
@@ -111,6 +119,41 @@ class Home extends Component {
 		this._updatePosition(pos);
 	}
 
+	async _saveDrink() {
+		if (this.lastId) {
+			await db.drinks.update(this.state.selectedDrink.id, this.state.selectedDrink);
+			this.reloadDrinks();
+		}
+		this.handleClose();
+	}
+
+	_updateDrinkPosition(event, value) {
+		var target = event.target.id;
+		var drink = this.state.selectedDrink;
+		drink[target] = value;
+		this._mounted && this.setState(this.updateState({
+			selectedDrink: drink
+		}));
+	}
+
+	_updateDate(event, value) {
+		var drink = this.state.selectedDrink;
+		drink.timestamp.setDate(value.getDate());
+		drink.timestamp.setMonth(value.getMonth());
+		drink.timestamp.setFullYear(value.getFullYear());
+		this._mounted && this.setState(this.updateState({
+			selectedDrink: drink
+		}));
+	}
+
+	_updateTime(event, value) {
+		var drink = this.state.selectedDrink;
+		drink.timestamp = value;
+		this._mounted && this.setState(this.updateState({
+			selectedDrink: drink
+		}));
+	}
+
 	async _deleteDrink() {
 		this.handleClose();
 		if (this.lastId) {
@@ -119,11 +162,14 @@ class Home extends Component {
 		}
 	}
 
-	startTouch(id) {
+	startTouch(id, drink) {
 		if (id === this.lastId) {
 			if (this.lastIdCount >= 2) {
 				this.lastIdCount = 0;
-				this._mounted && this.setState(this.updateState({ showDelete: true }));
+				this._mounted && this.setState(this.updateState({
+					showEdit: true,
+					selectedDrink: drink
+				}));
 			} else {
 				this.lastIdCount++;
 			}
@@ -134,7 +180,10 @@ class Home extends Component {
 	}
 
 	handleClose() {
-		this._mounted && this.setState(this.updateState({ showDelete: false }));
+		this._mounted && this.setState(this.updateState({
+			showEdit: false,
+			selectedDrink: {}
+		}));
 	}
 
 	_updatePosition(pos) {
@@ -197,7 +246,7 @@ class Home extends Component {
 							<Subheader>{day.key.calendar(null, dayLabel)}</Subheader>
 							{day.list.map((drink, didx) =>
 								<ListItem key={`drink-${didx}`}
-									onClick={this.startTouch.bind(null, drink.id)}
+									onClick={this.startTouch.bind(null, drink.id, drink)}
 									leftAvatar={<Avatar backgroundColor={'#718792'}
 										icon={<span role="img" aria-label="beer" style={{ marginTop: '.75em' }}>🍺</span>} />}
 									primaryText={<span>{drink.text} ({Math.round(drink.ml)}ml)</span>}
@@ -227,23 +276,60 @@ class Home extends Component {
 					</BubbleList>
 				</SpeedDial>
 				<Dialog
-					title="Delete Drink"
+					title="Edit Drink"
+					contentStyle={{
+						width: '100%',
+						maxWidth: 'none',
+					}}
 					actions={[
+						<FlatButton
+							label="Delete"
+							primary={false}
+							onClick={this._deleteDrink}
+							style={{
+								float: 'left',
+							}}
+						/>,
 						<FlatButton
 							label="Cancel"
 							primary={false}
 							onClick={this.handleClose}
 						/>,
 						<FlatButton
-							label="Delete"
-							primary={true}
-							onClick={this._deleteDrink}
+							label="SAve"
+							primary={false}
+							onClick={this._saveDrink}
 						/>,
 					]}
 					modal={true}
-					open={this.state.showDelete}
+					open={this.state.showEdit}
 				>
-					Remove selected drink?
+					<TextField
+						id="lat"
+						floatingLabelText="Latitude"
+						fullWidth={true}
+						value={this.state.selectedDrink.lat}
+						onChange={this._updateDrinkPosition}
+					/>
+					<TextField
+						id="lon"
+						floatingLabelText="Longitude"
+						fullWidth={true}
+						value={this.state.selectedDrink.lng}
+						onChange={this._updateDrinkPosition}
+					/>
+					<DatePicker
+						floatingLabelText="Date"
+						value={this.state.selectedDrink.timestamp}
+						onChange={this._updateDate}
+						formatDate={(d) => moment(d).format("DD.MM.YYYY")}
+					/>
+					<TimePicker
+						floatingLabelText="Time"
+						value={this.state.selectedDrink.timestamp}
+						onChange={this._updateTime}
+						format="24hr"
+					/>
 				</Dialog>
 			</div>
 		)

@@ -290,12 +290,19 @@ class Settings extends Component {
 					autoScrollBodyContent={true}
 					onRequestClose={this._toggleEditDrink}
 					open={this.state.showEditDrink}
+					contentStyle={{
+						width: '100%',
+						maxWidth: 'none',
+					}}
 					actions={[
 						<FlatButton
 							label="Delete"
 							primary={false}
 							disabled={!this.state.showDeleteDrink}
 							onClick={this._deleteDrink}
+							style={{
+								float: 'left',
+							}}
 						/>,
 						<FlatButton
 							label="Cancel"
