@@ -3,10 +3,10 @@ const makeCancelable = (promise) => {
 
 	const wrappedPromise = new Promise((resolve, reject) => {
 		promise.then((val) =>
-			hasCanceled_ ? reject({isCanceled: true}) : resolve(val)
+			hasCanceled_ ? reject({ isCanceled: true }) : resolve(val)
 		);
 		promise.catch((error) =>
-			hasCanceled_ ? reject({isCanceled: true}) : reject(error)
+			hasCanceled_ ? reject({ isCanceled: true }) : reject(error)
 		);
 	});
 
@@ -19,24 +19,24 @@ const makeCancelable = (promise) => {
 };
 
 const getCurrentPosition = () => {
-	return new Promise( ( resolve, reject ) => {
-		navigator.geolocation.getCurrentPosition( ( position ) => {
-			let latitude  = position.coords.latitude;
+	return new Promise((resolve, reject) => {
+		navigator.geolocation.getCurrentPosition((position) => {
+			let latitude = position.coords.latitude;
 			let longitude = position.coords.longitude;
 
-			resolve( { latitude, longitude } );
+			resolve({ latitude, longitude });
 
-		}, () => { reject( 'We could not get your location.' ); },
-		{
-			enableHighAccuracy: true,
-			timeout: 10000,
-			maximumAge: 0
-		});
+		}, () => { reject('We could not get your location.'); },
+			{
+				enableHighAccuracy: true,
+				timeout: 10000,
+				maximumAge: 0
+			});
 	});
 };
 
 const getFilter = async (db) => {
-	var setting = await db.settings.where({key:'yearFilter'}).last();
+	var setting = await db.settings.where({ key: 'yearFilter' }).last();
 	if (setting !== undefined && setting.value !== null) {
 		return {
 			year: setting.value,
@@ -52,4 +52,4 @@ const updateState = (that, data) => {
 	return Object.assign({}, that.state, data);
 };
 
-export {getCurrentPosition, makeCancelable, updateState, getFilter};
+export { getCurrentPosition, makeCancelable, updateState, getFilter };

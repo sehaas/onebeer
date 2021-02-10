@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Avatar from 'material-ui/Avatar';
-import {List, ListItem} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import moment from 'moment';
@@ -9,11 +9,11 @@ import { SpeedDial, BubbleList, BubbleListItem } from 'react-speed-dial';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
-import {amber600, amber500, amber400, amber300, amber200, amber100, amber50} from 'material-ui/styles/colors';
+import { amber600, amber500, amber400, amber300, amber200, amber100, amber50 } from 'material-ui/styles/colors';
 
 import db from './db';
 import State from './State';
-import {getCurrentPosition, updateState, getFilter} from './Helper';
+import { getCurrentPosition, updateState, getFilter } from './Helper';
 
 class Home extends Component {
 
@@ -68,7 +68,7 @@ class Home extends Component {
 	async reloadDrinks() {
 		var filter = await getFilter(db);
 		var drinks = filter != null
-			? (await db.drinks.where('timestamp').between(filter.start, filter.end, true,true).toArray()).reverse()
+			? (await db.drinks.where('timestamp').between(filter.start, filter.end, true, true).toArray()).reverse()
 			: (await db.drinks.toArray()).reverse();
 		var overall = 0;
 		var nrDrinks = drinks.length;
@@ -150,7 +150,7 @@ class Home extends Component {
 	}
 
 	handleChangeSpeedDial({ isOpen }) {
-		this.setState(this.updateState({isSpeedDialOpen: isOpen}));
+		this.setState(this.updateState({ isSpeedDialOpen: isOpen }));
 	}
 
 	render() {
@@ -177,8 +177,8 @@ class Home extends Component {
 						margin: '1vw'
 					}}
 				>
-					<span style={{fontSize:'3em'}}>{this.state.overall}</span>
-					<span><br/>litres</span>
+					<span style={{ fontSize: '3em' }}>{this.state.overall}</span>
+					<span><br />litres</span>
 				</Paper>
 				<Paper zDepth={2}
 					style={{
@@ -188,27 +188,27 @@ class Home extends Component {
 						margin: '1vw'
 					}}
 				>
-					<span style={{fontSize:'3em'}}>{this.state.nrDrinks}</span>
-					<span><br/>drinks</span>
+					<span style={{ fontSize: '3em' }}>{this.state.nrDrinks}</span>
+					<span><br />drinks</span>
 				</Paper>
 				<List>
-				{this.state.drinks.map((day, idx) =>
-					<div key={`day-${idx}`}>
-						<Subheader>{day.key.calendar(null, dayLabel)}</Subheader>
-						{day.list.map((drink, didx) =>
+					{this.state.drinks.map((day, idx) =>
+						<div key={`day-${idx}`}>
+							<Subheader>{day.key.calendar(null, dayLabel)}</Subheader>
+							{day.list.map((drink, didx) =>
 								<ListItem key={`drink-${didx}`}
 									onClick={this.startTouch.bind(null, drink.id)}
 									leftAvatar={<Avatar backgroundColor={'#718792'}
-										icon={<span role="img" aria-label="beer" style={{marginTop:'.75em'}}>🍺</span>} />}
+										icon={<span role="img" aria-label="beer" style={{ marginTop: '.75em' }}>🍺</span>} />}
 									primaryText={<span>{drink.text} ({Math.round(drink.ml)}ml)</span>}
 									secondaryText={
 										<p>{moment(drink.timestamp).format("HH:mm:ss")}</p>
 									}
 								/>
-						)}
-						<Divider/>
-					</div>
-				)}
+							)}
+							<Divider />
+						</div>
+					)}
 				</List>
 				<SpeedDial isOpen={this.state.isSpeedDialOpen} onChange={this.handleChangeSpeedDial} style={moveUp}>
 					<BubbleList>
@@ -217,7 +217,7 @@ class Home extends Component {
 								primaryText={item.text}
 								rightAvatar={
 									<Avatar
-										backgroundColor={colors[Math.min(this.state.templates.length-index, colors.length)]}
+										backgroundColor={colors[Math.min(this.state.templates.length - index, colors.length)]}
 										icon={<ContentAdd />}
 									/>
 								}
@@ -242,7 +242,7 @@ class Home extends Component {
 					]}
 					modal={true}
 					open={this.state.showDelete}
-					>
+				>
 					Remove selected drink?
 				</Dialog>
 			</div>

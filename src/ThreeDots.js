@@ -19,7 +19,7 @@ class ThreeDots extends Component {
 
 		this.state = {
 			selectedYear: null,
-			years : [],
+			years: [],
 			showWhatsNew: false,
 			showFilter: false
 		}
@@ -48,7 +48,7 @@ class ThreeDots extends Component {
 	}
 
 	async _openFilterDialog() {
-		var filter = await getFilter(db) || {year: null};
+		var filter = await getFilter(db) || { year: null };
 		var yearStart = (await db.drinks.orderBy('timestamp').limit(1).first(f => f ? f.timestamp : new Date())).getFullYear();
 		var yearCurr = new Date().getFullYear();
 		var years = [];
@@ -58,14 +58,14 @@ class ThreeDots extends Component {
 		this._mounted && this.setState(this.updateState({
 			showFilter: true,
 			selectedYear: filter.year,
-			years : years
+			years: years
 		}));
 	}
 
 	async _applyFilterDialog() {
-		await db.settings.where({key:'yearFilter'}).modify((val, ref) => delete ref.value);
+		await db.settings.where({ key: 'yearFilter' }).modify((val, ref) => delete ref.value);
 		await db.settings.add({
-			key:'yearFilter',
+			key: 'yearFilter',
 			value: this.state.selectedYear
 		});
 		this._mounted && this.setState(this.updateState({
@@ -99,11 +99,11 @@ class ThreeDots extends Component {
 					iconButtonElement={
 						<IconButton><MoreVertIcon /></IconButton>
 					}
-					targetOrigin={{horizontal: 'right', vertical: 'top'}}
-					anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+					targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+					anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
 				>
-					<MenuItem primaryText="Settings" onClick={() => history.replace('/settings')} rightIcon={<SettingsIcon/>} />
-					<MenuItem primaryText="Whats New" onClick={this._toggleWhatsNew} rightIcon={<WhatsNewIcon/>} />
+					<MenuItem primaryText="Settings" onClick={() => history.replace('/settings')} rightIcon={<SettingsIcon />} />
+					<MenuItem primaryText="Whats New" onClick={this._toggleWhatsNew} rightIcon={<WhatsNewIcon />} />
 				</IconMenu>
 
 				<Dialog
@@ -121,7 +121,7 @@ class ThreeDots extends Component {
 							onClick={this._applyFilterDialog}
 						/>
 					]}
-					>
+				>
 					<SelectField floatingLabelText="Filter by year"
 						value={this.state.selectedYear} onChange={this._handleChange}>
 						<MenuItem value={null} label=" " primaryText="no filter" />
@@ -143,7 +143,7 @@ class ThreeDots extends Component {
 					autoScrollBodyContent={true}
 					onRequestClose={this._toggleWhatsNew}
 					open={this.state.showWhatsNew}
-					>
+				>
 
 					<div>
 						<b>08.11.2020</b>

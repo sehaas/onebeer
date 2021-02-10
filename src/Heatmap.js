@@ -35,13 +35,13 @@ class Heatmap extends Component {
 			? (await db.drinks.where('timestamp').between(filter.start, filter.end, true, true).toArray()).reverse()
 			: (await db.drinks.toArray()).reverse();
 		var data = [];
-		drinks.forEach(function(itm, idx) {
+		drinks.forEach(function (itm, idx) {
 			data.push([itm.lat, itm.lng]);
 		});
 		if (this._mounted) {
 			if (this.layer != null)
 				this.refs.map.leafletElement.removeLayer(this.layer);
-			this.layer = L.heatLayer(data, {radius: 25, minOpacity: 0.3}).addTo(this.refs.map.leafletElement);
+			this.layer = L.heatLayer(data, { radius: 25, minOpacity: 0.3 }).addTo(this.refs.map.leafletElement);
 			this.setState(this.updateState({ drinks: drinks }));
 		}
 	}
@@ -69,10 +69,10 @@ class Heatmap extends Component {
 		return (
 			<Map ref="map" center={this.state.global.coords}
 				zoom={this.state.zoom} zoomControl={false}
-				style={{position: 'absolute'}} >
+				style={{ position: 'absolute' }} >
 				<TileLayer
-				attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+					attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				/>
 				<Marker position={this.state.global.coords} />
 				<ZoomControl position="bottomright" />

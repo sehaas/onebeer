@@ -16,9 +16,9 @@ class Charts extends Component {
 			global: State,
 			punchcard: [],
 			weekdays: [],
-			month:[],
-			year:[],
-			drink:[],
+			month: [],
+			year: [],
+			drink: [],
 			drinkLiter: [],
 			streak: 0,
 			break: 0,
@@ -50,19 +50,19 @@ class Charts extends Component {
 		var weekdays = [];
 		var month = [];
 		var year = new Array(366).fill(0).map((d, i) => {
-			return { x:moment(i+1,'DDD').format('DD-MM-YYYY'), y:0 };
+			return { x: moment(i + 1, 'DDD').format('DD-MM-YYYY'), y: 0 };
 		});
 		var drink = [];
 		var drinkLiter = [];
 		var drinkLabel = [];
 
-		for (var d=1; d<=7; d++){
+		for (var d = 1; d <= 7; d++) {
 			var day = moment().weekday(d).format('ddd');
 			weekdays.push({
 				x: day,
 				y: 0
 			});
-			for (var i=0; i<24; i++){
+			for (var i = 0; i < 24; i++) {
 				punchcard.push({
 					type: 0,
 					y: i,
@@ -72,7 +72,7 @@ class Charts extends Component {
 			}
 		};
 
-		for(var m=0; m<12; m++) {
+		for (var m = 0; m < 12; m++) {
 			month.push({
 				x: moment().month(m).format('MMM'),
 				y: 0
@@ -91,7 +91,7 @@ class Charts extends Component {
 			weekdays[day].y += liter;
 			month[m].y += liter;
 			year[d - 1].y += liter;
-			if (drinkLabel.indexOf(elem.text) -1) {
+			if (drinkLabel.indexOf(elem.text) - 1) {
 				drinkLabel.push(elem.text);
 				drinkLiter.push({
 					x: elem.text,
@@ -103,7 +103,7 @@ class Charts extends Component {
 
 		var curStreak = 1;
 		var longestStreak = drinks.length > 0
-			? { cnt: 1, day: moment(drinks[0].timestamp).format('DD.MM.YYYY')}
+			? { cnt: 1, day: moment(drinks[0].timestamp).format('DD.MM.YYYY') }
 			: { cnt: 0, day: null };
 		var lastBreakDay = filter != null ? moment.min(moment(filter.end), moment()) : moment();
 		var tmpDrinks = d3.pairs(drinks.concat([{ timestamp: lastBreakDay }]), (a, b) => {
@@ -125,12 +125,12 @@ class Charts extends Component {
 			}
 			return {
 				cnt: diff,
-				day:  aDay.add(1, 'day').format('DD.MM.YYYY')
+				day: aDay.add(1, 'day').format('DD.MM.YYYY')
 			};
 		});
-		var longestBreak = tmpDrinks[d3.scan(tmpDrinks, (a,b) => b.cnt - a.cnt)] || { cnt: 0, day: null };
+		var longestBreak = tmpDrinks[d3.scan(tmpDrinks, (a, b) => b.cnt - a.cnt)] || { cnt: 0, day: null };
 
-		punchcard = punchcard.filter( e => e.z > 0 );
+		punchcard = punchcard.filter(e => e.z > 0);
 
 		this._mounted && this.setState(this.updateState({
 			punchcard: punchcard,
@@ -163,9 +163,9 @@ class Charts extends Component {
 							margin: '1vw'
 						}}
 					>
-						<span>longest streak<br/></span>
-						<span style={{fontSize:'3em'}}>{this.state.streak}</span>
-						<span><br/>from {this.state.streakStart}</span>
+						<span>longest streak<br /></span>
+						<span style={{ fontSize: '3em' }}>{this.state.streak}</span>
+						<span><br />from {this.state.streakStart}</span>
 					</Paper>
 				}
 				{this.state.break > 0 &&
@@ -177,9 +177,9 @@ class Charts extends Component {
 							margin: '1vw'
 						}}
 					>
-						<span>longest break<br/></span>
-						<span style={{fontSize:'3em'}}>{this.state.break}</span>
-						<span><br/>from {this.state.breakStart}</span>
+						<span>longest break<br /></span>
+						<span style={{ fontSize: '3em' }}>{this.state.break}</span>
+						<span><br />from {this.state.breakStart}</span>
 					</Paper>
 				}
 				<Card initiallyExpanded={true}>
@@ -195,10 +195,10 @@ class Charts extends Component {
 							width={this.state.width}
 							height={this.state.heightPC}
 							xType="text"
-							yDomainRange={[0,23]}
+							yDomainRange={[0, 23]}
 							dotRadius={20}
 							grid
-							margin={{top: 20, right: 0, bottom: 30, left: 30}}
+							margin={{ top: 20, right: 0, bottom: 30, left: 30 }}
 						/>
 					</CardText>
 				</Card>
@@ -213,12 +213,12 @@ class Charts extends Component {
 							data={this.state.weekdays}
 							colorBars
 							axes
-							axisLabels={{y: 'litres'}}
+							axisLabels={{ y: 'litres' }}
 							width={this.state.width}
 							height={this.state.heightBar}
 							xType="text"
 							grid
-							margin={{top: 10, right: 0, bottom: 30, left: 50}}
+							margin={{ top: 10, right: 0, bottom: 30, left: 50 }}
 						/>
 					</CardText>
 				</Card>
@@ -233,12 +233,12 @@ class Charts extends Component {
 							data={this.state.month}
 							colorBars
 							axes
-							axisLabels={{y: 'litres'}}
+							axisLabels={{ y: 'litres' }}
 							width={this.state.width}
 							height={this.state.heightBar}
 							xType="text"
 							grid
-							margin={{top: 10, right: 0, bottom: 30, left: 50}}
+							margin={{ top: 10, right: 0, bottom: 30, left: 50 }}
 						/>
 					</CardText>
 				</Card>
@@ -253,7 +253,7 @@ class Charts extends Component {
 							data={this.state.year}
 							colorBars
 							axes
-							axisLabels={{y: 'litres'}}
+							axisLabels={{ y: 'litres' }}
 							xTickNumber={12}
 							barWidth={1}
 							xType={'time'}
@@ -262,7 +262,7 @@ class Charts extends Component {
 							width={this.state.width}
 							height={this.state.heightBar}
 							grid
-							margin={{top: 10, right: 0, bottom: 30, left: 50}}
+							margin={{ top: 10, right: 0, bottom: 30, left: 50 }}
 						/>
 					</CardText>
 				</Card>
@@ -277,12 +277,12 @@ class Charts extends Component {
 							data={this.state.drinkLiter}
 							colorBars
 							axes
-							axisLabels={{y: 'litres'}}
+							axisLabels={{ y: 'litres' }}
 							width={this.state.width}
 							height={this.state.heightBar}
 							xType="text"
 							grid
-							margin={{top: 10, right: 0, bottom: 30, left: 50}}
+							margin={{ top: 10, right: 0, bottom: 30, left: 50 }}
 						/>
 					</CardText>
 				</Card>

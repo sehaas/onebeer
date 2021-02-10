@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {List, ListItem} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import Toggle from 'material-ui/Toggle';
@@ -14,7 +14,7 @@ import download from 'downloadjs';
 import moment from 'moment';
 
 import db from './db';
-import {updateState} from './Helper';
+import { updateState } from './Helper';
 
 
 class Settings extends Component {
@@ -143,7 +143,7 @@ class Settings extends Component {
 		this._toggleExport();
 		var data = await db.export();
 		var dataString = JSON.stringify(data);
-		var filename =  "onebeer_" + moment().format("YYYYMMDD-HHmmss") + ".json";
+		var filename = "onebeer_" + moment().format("YYYYMMDD-HHmmss") + ".json";
 		download(dataString, filename, "application/json");
 	}
 
@@ -180,7 +180,7 @@ class Settings extends Component {
 				}));
 			}
 
-		} catch(e) {
+		} catch (e) {
 			this._mounted && this.setState(this.updateState({
 				errorMessage: e.message
 			}));
@@ -211,7 +211,7 @@ class Settings extends Component {
 							label="Add New..."
 							primary={true}
 							onClick={this._newDrink}
-							/>
+						/>
 					</Subheader>
 					{this.state.templates.map((tmpl, idx) =>
 						<ListItem key={`tmpl-${idx}`}
@@ -219,7 +219,7 @@ class Settings extends Component {
 							secondaryText={<p>{tmpl.ml}ml{tmpl.af ? ", alcohol free" : ""}{tmpl.active ? "" : ", inactive"}</p>}
 							rightIconButton={
 								<IconButton onClick={() => this._editDrink(tmpl)} >
-									<SettingsIcon/>
+									<SettingsIcon />
 								</IconButton>
 							}
 						/>
@@ -245,7 +245,7 @@ class Settings extends Component {
 					autoScrollBodyContent={true}
 					onRequestClose={this._toggleExport}
 					open={this.state.showExport}
-					>
+				>
 
 					You can export all your data and settings as a JSON file. (May not work under iOS)
 
@@ -269,7 +269,7 @@ class Settings extends Component {
 					autoScrollBodyContent={true}
 					onRequestClose={this._toggleImport}
 					open={this.state.showImport}
-					>
+				>
 
 					<TextField
 						id="importText"
@@ -280,7 +280,7 @@ class Settings extends Component {
 						value={this.state.importJson}
 						onChange={this._updateJson}
 						errorText={this.state.errorMessage}
-						/>
+					/>
 
 				</Dialog>
 
@@ -308,7 +308,7 @@ class Settings extends Component {
 							onClick={() => this._saveDrink(true)}
 						/>,
 					]}
-					>
+				>
 
 					<TextField
 						id="text"
@@ -316,7 +316,7 @@ class Settings extends Component {
 						fullWidth={true}
 						value={this.state.currentTemplate.text}
 						onChange={this._updateTemplate}
-						/>
+					/>
 					<TextField
 						id="ml"
 						floatingLabelText="Millilitre"
@@ -324,19 +324,19 @@ class Settings extends Component {
 						fullWidth={true}
 						value={this.state.currentTemplate.ml}
 						onChange={this._updateTemplate}
-						/>
+					/>
 					<Toggle
 						id="active"
 						label="Show in Menu"
 						defaultToggled={this.state.currentTemplate.active}
 						onToggle={this._updateTemplate}
-						/>
+					/>
 					<Toggle
 						id="af"
 						label="Alcohol free"
 						defaultToggled={this.state.currentTemplate.af}
 						onToggle={this._updateTemplate}
-						/>
+					/>
 					<TextField
 						id="order"
 						floatingLabelText="Sort order"
@@ -344,7 +344,7 @@ class Settings extends Component {
 						fullWidth={true}
 						value={this.state.currentTemplate.order}
 						onChange={this._updateTemplate}
-						/>
+					/>
 				</Dialog>
 			</div>
 		);

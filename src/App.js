@@ -6,7 +6,7 @@ import {
 import { withRouter } from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
+import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
 import AppBar from 'material-ui/AppBar';
 import HomeIcon from 'material-ui/svg-icons/action/home';
@@ -31,7 +31,7 @@ class MainTabs extends Component {
 	render() {
 		const { location, history } = this.props
 		var selectedIndex;
-		switch(location.pathname) {
+		switch (location.pathname) {
 			case '/': selectedIndex = 0; break;
 			case '/charts': selectedIndex = 1; break;
 			case '/heatmap': selectedIndex = 2; break;
@@ -39,26 +39,26 @@ class MainTabs extends Component {
 			default: selectedIndex = 0; break;
 		}
 		return (
-				<Paper zDepth={1} style={keepDown}>
-					<BottomNavigation selectedIndex={selectedIndex}>
-						<BottomNavigationItem
-							label="Tracking"
-							icon={<HomeIcon/>}
-							onClick={() => history.replace('/')}
-						/>
-						<BottomNavigationItem
-							label="Charts"
-							icon={<ChartIcon/>}
-							onClick={() => history.replace('/charts')}
-						/>
-						<BottomNavigationItem
-							label="Heatmap"
-							icon={<PlaceIcon/>}
-							onClick={() => history.replace('/heatmap')}
-						/>
-					</BottomNavigation>
-				</Paper>
-			)
+			<Paper zDepth={1} style={keepDown}>
+				<BottomNavigation selectedIndex={selectedIndex}>
+					<BottomNavigationItem
+						label="Tracking"
+						icon={<HomeIcon />}
+						onClick={() => history.replace('/')}
+					/>
+					<BottomNavigationItem
+						label="Charts"
+						icon={<ChartIcon />}
+						onClick={() => history.replace('/charts')}
+					/>
+					<BottomNavigationItem
+						label="Heatmap"
+						icon={<PlaceIcon />}
+						onClick={() => history.replace('/heatmap')}
+					/>
+				</BottomNavigation>
+			</Paper>
+		)
 	}
 }
 
@@ -97,7 +97,7 @@ class App extends Component {
 		return (
 			<MuiThemeProvider muiTheme={muiTheme}>
 				<Router>
-					<div style={{marginTop: '50px'}}>
+					<div style={{ marginTop: '50px' }}>
 						<AppBar
 							title="onebeer"
 							showMenuIconButton={false}
@@ -108,10 +108,10 @@ class App extends Component {
 							}}
 						/>
 						<Switch>
-							<Route exact path="/" component={Home}/>
-							<Route path="/charts" component={Charts}/>
-							<Route path="/heatmap" component={Heatmap}/>
-							<Route path="/settings" component={Settings}/>
+							<Route exact path="/" component={Home} />
+							<Route path="/charts" component={Charts} />
+							<Route path="/heatmap" component={Heatmap} />
+							<Route path="/settings" component={Settings} />
 						</Switch>
 						<MainTabsWithRouter />
 					</div>
