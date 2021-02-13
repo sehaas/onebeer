@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "PUBLIC_URL=https://app.onebeer.me react-scripts build"
   },
   "browserslist": [
     ">0.2%",
