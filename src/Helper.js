@@ -48,8 +48,24 @@ const getFilter = async (db) => {
 	}
 };
 
+const checkAppVersion = async (db, version) => {
+	var setting = await db.settings.where({ key: 'currentVersion' }).last();
+	if (setting === undefined || setting.value === null) {
+		setting = {
+			key: 'currentVersion',
+			value: "0"
+		};
+	}
+	if (setting.value < version) {
+		setting.value = version;
+		await db.settings.put(setting);
+		return true;
+	}
+	return false;
+};
+
 const updateState = (that, data) => {
 	return Object.assign({}, that.state, data);
 };
 
-export { getCurrentPosition, makeCancelable, updateState, getFilter };
+export { getCurrentPosition, makeCancelable, updateState, getFilter, checkAppVersion };

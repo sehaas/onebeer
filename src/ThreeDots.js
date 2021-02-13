@@ -5,13 +5,17 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import { List, ListItem } from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
+import moment from 'moment';
 import FilterListIcon from 'material-ui/svg-icons/content/filter-list';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import WhatsNewIcon from 'material-ui/svg-icons/av/new-releases';
 
 import db from './db';
-import { updateState, getFilter } from './Helper';
+import { updateState, getFilter, checkAppVersion } from './Helper';
 
 class ThreeDots extends Component {
 	constructor(props) {
@@ -20,6 +24,7 @@ class ThreeDots extends Component {
 		this.state = {
 			selectedYear: null,
 			years: [],
+			whatsnew: [],
 			showWhatsNew: false,
 			showFilter: false
 		}
@@ -31,10 +36,29 @@ class ThreeDots extends Component {
 		this._applyFilterDialog = this._applyFilterDialog.bind(this);
 		this._handleChange = this._handleChange.bind(this);
 		this.updateState = updateState.bind(null, this);
+
+		this.whatsnew = {
+			"2021-01-10": ["Edit tracked drinks: Triple click a drink to edit date, time, and location."],
+			"2020-11-08": ["Customize trackable drinks"],
+			"2019-07-13": ["Add year filter"],
+			"2019-04-24": ["Fix Import on iPhones"],
+			"2018-12-23": ["Add Pints"],
+			"2018-10-28": ["Add graph: barchart for each day of a year", "Add longest streak / break"],
+			"2018-09-29": ["Add graph: Litres per drink-type"],
+			"2018-09-13": ["Fix import of geolocations", "Upgrade libraries"],
+			"2017-12-22": ["Import Database (experimental)"],
+			"2017-11-26": ["Customize the '+' menu", "Export Database"],
+			"2017-11-05": ["Delete entries by tapping it three times", "Add Settings menu"]
+		};
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		this._mounted = true;
+		var showDlg = await checkAppVersion(db, Object.keys(this.whatsnew)[0]);
+		this.setState(this.updateState({
+			showWhatsNew: showDlg,
+			whatsnew: Object.entries(this.whatsnew)
+		}));
 	}
 
 	componentWillUnmount() {
@@ -134,6 +158,15 @@ class ThreeDots extends Component {
 					title="Whats New"
 					actions={[
 						<FlatButton
+							href="https://paypal.me/sehaas"
+							target="_blank"
+							label="Buy me a 🍺"
+							secondary={true}
+							style={{
+								float: 'left',
+							}}
+						/>,
+						<FlatButton
 							label="OK"
 							primary={true}
 							onClick={this._toggleWhatsNew}
@@ -144,88 +177,19 @@ class ThreeDots extends Component {
 					onRequestClose={this._toggleWhatsNew}
 					open={this.state.showWhatsNew}
 				>
-
-					<div>
-						<b>10.02.2021</b>
-						<ul>
-							<li>Edit tracked drinks</li>
-						</ul>
-					</div>
-
-					<div>
-						<b>08.11.2020</b>
-						<ul>
-							<li>Customize trackable drinks</li>
-						</ul>
-					</div>
-
-					<div>
-						<b>13.07.2019</b>
-						<ul>
-							<li>Add year filter</li>
-						</ul>
-					</div>
-
-					<div>
-						<b>24.04.2019</b>
-						<ul>
-							<li>Fix Import on iPhones</li>
-						</ul>
-					</div>
-
-					<div>
-						<b>23.12.2018</b>
-						<ul>
-							<li>Add Pints</li>
-						</ul>
-					</div>
-
-					<div>
-						<b>28.10.2018</b>
-						<ul>
-							<li>Add graph: barchart for each day of a year</li>
-							<li>Add longest streak / break</li>
-						</ul>
-					</div>
-
-					<div>
-						<b>29.09.2018</b>
-						<ul>
-							<li>Add graph: Litres per drink-type</li>
-						</ul>
-					</div>
-
-					<div>
-						<b>13.09.2018</b>
-						<ul>
-							<li>Fix import of geolocations</li>
-							<li>Upgrade libraries</li>
-						</ul>
-					</div>
-
-					<div>
-						<b>22.12.2017</b>
-						<ul>
-							<li>Import Database (experimental)</li>
-						</ul>
-					</div>
-
-					<div>
-						<b>26.11.2017</b>
-						<ul>
-							<li>Customize the "+" menu</li>
-							<li>Export Database</li>
-						</ul>
-					</div>
-
-					<div>
-						<b>05.11.2017</b>
-						<ul>
-							<li>Delete entries by tapping it three times</li>
-							<li>Add Settings menu</li>
-						</ul>
-					</div>
-
+					<List>
+						{this.state.whatsnew.map(([date, list]) =>
+							<div key={date}>
+								<Subheader>{moment(date).format("DD.MM.YYYY")}</Subheader>
+								{list.map((entry, didx) =>
+									<ListItem key={`${date}-${didx}`}
+										primaryText={<span>{entry}</span>}
+									/>
+								)}
+								<Divider />
+							</div>
+						)}
+					</List>
 				</Dialog>
 
 			</div>

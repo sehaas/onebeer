@@ -297,7 +297,7 @@ class Settings extends Component {
 					actions={[
 						<FlatButton
 							label="Delete"
-							primary={false}
+							secondary={true}
 							disabled={!this.state.showDeleteDrink}
 							onClick={this._deleteDrink}
 							style={{

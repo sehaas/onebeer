@@ -284,7 +284,7 @@ class Home extends Component {
 					actions={[
 						<FlatButton
 							label="Delete"
-							primary={false}
+							secondary={true}
 							onClick={this._deleteDrink}
 							style={{
 								float: 'left',
@@ -296,8 +296,8 @@ class Home extends Component {
 							onClick={this.handleClose}
 						/>,
 						<FlatButton
-							label="SAve"
-							primary={false}
+							label="Save"
+							primary={true}
 							onClick={this._saveDrink}
 						/>,
 					]}
