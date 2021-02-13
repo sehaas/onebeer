@@ -13,6 +13,8 @@ import FilterListIcon from 'material-ui/svg-icons/content/filter-list';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import WhatsNewIcon from 'material-ui/svg-icons/av/new-releases';
+import InfoIcon from 'material-ui/svg-icons/action/info';
+import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
 
 import db from './db';
 import { updateState, getFilter, checkAppVersion } from './Helper';
@@ -26,11 +28,13 @@ class ThreeDots extends Component {
 			years: [],
 			whatsnew: [],
 			showWhatsNew: false,
-			showFilter: false
+			showFilter: false,
+			showImprint: false
 		}
 
 		this._mounted = false;
 		this._toggleWhatsNew = this._toggleWhatsNew.bind(this);
+		this._toggleImprint = this._toggleImprint.bind(this);
 		this._openFilterDialog = this._openFilterDialog.bind(this);
 		this._closeFilterDialog = this._closeFilterDialog.bind(this);
 		this._applyFilterDialog = this._applyFilterDialog.bind(this);
@@ -68,6 +72,11 @@ class ThreeDots extends Component {
 	_toggleWhatsNew() {
 		this._mounted && this.setState(this.updateState({
 			showWhatsNew: !this.state.showWhatsNew,
+		}));
+	}
+	_toggleImprint() {
+		this._mounted && this.setState(this.updateState({
+			showImprint: !this.state.showImprint,
 		}));
 	}
 
@@ -128,6 +137,7 @@ class ThreeDots extends Component {
 				>
 					<MenuItem primaryText="Settings" onClick={() => history.replace('/settings')} rightIcon={<SettingsIcon />} />
 					<MenuItem primaryText="Whats New" onClick={this._toggleWhatsNew} rightIcon={<WhatsNewIcon />} />
+					<MenuItem primaryText="Imprint" onClick={this._toggleImprint} rightIcon={<InfoIcon />} />
 				</IconMenu>
 
 				<Dialog
@@ -154,6 +164,7 @@ class ThreeDots extends Component {
 						)}
 					</SelectField>
 				</Dialog>
+
 				<Dialog
 					title="Whats New"
 					actions={[
@@ -190,6 +201,42 @@ class ThreeDots extends Component {
 							</div>
 						)}
 					</List>
+				</Dialog>
+
+				<Dialog
+					title="Imprint"
+					actions={[
+						<FlatButton
+							label="OK"
+							primary={true}
+							onClick={this._toggleImprint}
+						/>,
+					]}
+					modal={false}
+					autoScrollBodyContent={true}
+					onRequestClose={this._toggleImprint}
+					open={this.state.showImprint}
+				>
+					<p>
+						Sebastian Haas
+						&lt;sehaas@deebas.com&gt;
+					</p>
+					<Divider />
+					<div>
+						<FlatButton
+							href="https://github.com/sehaas/onebeer"
+							target="_blank"
+							label="Report a bug"
+							labelPosition="before"
+							icon={<BugReportIcon />}
+						/>
+						<Divider />
+						<FlatButton
+							href="https://paypal.me/sehaas"
+							target="_blank"
+							label="Buy me a 🍺"
+						/>
+					</div>
 				</Dialog>
 
 			</div>
