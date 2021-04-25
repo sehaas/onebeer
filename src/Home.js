@@ -312,7 +312,7 @@ class Home extends Component {
 						onChange={this._updateDrinkPosition}
 					/>
 					<TextField
-						id="lon"
+						id="lng"
 						floatingLabelText="Longitude"
 						fullWidth={true}
 						value={this.state.selectedDrink.lng}
