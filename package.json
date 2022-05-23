@@ -11,7 +11,7 @@
   "homepage": "https://app.onebeer.me/",
   "dependencies": {
     "d3": "^5.12.0",
-    "dexie": "^2.0.4",
+    "dexie": "^3.2.2",
     "downloadjs": "^1.4.7",
     "leaflet": "^1.5.1",
     "leaflet-css": "^0.1.0",
