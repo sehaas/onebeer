@@ -34,6 +34,8 @@ rsync -avt --delete build/ <HOST>:<DOCROOT>
 
 ## Versioning
 
+`0.1.8` Add `current` filter
+
 `0.1.7` Edit tracked drinks
 
 `0.1.6` Customize trackable drinks

@@ -38,11 +38,23 @@ const getCurrentPosition = () => {
 const getFilter = async (db) => {
 	var setting = await db.settings.where({ key: 'yearFilter' }).last();
 	if (setting !== undefined && setting.value !== null) {
-		return {
-			year: setting.value,
-			start: new Date(setting.value, 0, 1),
-			end: new Date(setting.value, 11, 31, 23, 59, 59)
-		};
+		if (setting.value == -1) {
+			const s = new Date();
+			s.setDate(s.getDate() -1);
+			const e = new Date();
+			e.setUTCHours(23, 59, 59);
+			return {
+				year: setting.value,
+				start: s,
+				end: e
+			};
+		} else {
+			return {
+				year: setting.value,
+				start: new Date(setting.value, 0, 1),
+				end: new Date(setting.value, 11, 31, 23, 59, 59)
+			};
+		}
 	} else {
 		return null;
 	}

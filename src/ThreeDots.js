@@ -42,6 +42,7 @@ class ThreeDots extends Component {
 		this.updateState = updateState.bind(null, this);
 
 		this.whatsnew = {
+			"2023-08-04": ["Add current filter"],
 			"2021-01-10": ["Edit tracked drinks: Triple click a drink to edit date, time, and location."],
 			"2020-11-08": ["Customize trackable drinks"],
 			"2019-07-13": ["Add year filter"],
@@ -159,6 +160,7 @@ class ThreeDots extends Component {
 					<SelectField floatingLabelText="Filter by year"
 						value={this.state.selectedYear} onChange={this._handleChange}>
 						<MenuItem value={null} label=" " primaryText="no filter" />
+						<MenuItem key={-1} value={-1} primaryText="current day" />
 						{this.state.years.map(y =>
 							<MenuItem key={y} value={y} primaryText={y} />
 						)}
