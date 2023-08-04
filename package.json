@@ -18,7 +18,7 @@
     "leaflet-css": "^0.1.0",
     "leaflet.heat": "^0.2.0",
     "material-ui": "^0.19.4",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "prop-types": "^15.7.2",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
