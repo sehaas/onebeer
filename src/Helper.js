@@ -38,7 +38,7 @@ const getCurrentPosition = () => {
 const getFilter = async (db) => {
 	var setting = await db.settings.where({ key: 'yearFilter' }).last();
 	if (setting !== undefined && setting.value !== null) {
-		if (setting.value == -1) {
+		if (setting.value === -1) {
 			const s = new Date();
 			s.setDate(s.getDate() -1);
 			const e = new Date();
